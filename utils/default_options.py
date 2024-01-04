@@ -31,7 +31,7 @@ META_COLOR = {
     'content': "#000000"
     }
 
-DASHBOARD_OPTIONS=Options(
+DEFAULT_OPTIONS=Options(
     head=html.head(
         html.meta(META_VIEWPORT),
         html.meta(META_COLOR),

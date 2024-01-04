@@ -10,17 +10,16 @@ from utils.logger import log, logging
 from utils.var_name import var_name
 
 from utils.assets import assets_api
-from utils.dashboard_options import DASHBOARD_OPTIONS
+from utils.default_options import DEFAULT_OPTIONS
 
 
 app = FastAPI(description="ReactPy", version="0.1.0")
 
 
 def run(AppMain: Callable[[], Component],
-        options:Options=DASHBOARD_OPTIONS,
+        options:Options=DEFAULT_OPTIONS,
         host='127.0.0.1',
         port=8000,
-        disable_server_logs=False,
         **kwargs) -> None:
 
     """Called once to run reactpy application on the fastapi server
