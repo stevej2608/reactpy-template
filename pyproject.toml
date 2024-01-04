@@ -8,6 +8,10 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.11"
 
+uvicorn = "^0.25.0"
+reactpy = {extras = ["fastapi"], version = "^1.0.2"}
+fastapi = "^0.108.0"
+
 
 [build-system]
 requires = ["poetry-core"]
