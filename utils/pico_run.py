@@ -2,17 +2,27 @@ from typing import Union, Callable
 from types import FunctionType
 from reactpy import component, html
 from reactpy.core.component import Component
-from utils.fast_server import run
+from reactpy.backend.fastapi import Options
 
-from utils.server_options import ServerOptions
+from utils.fast_server import run
 from utils.css_links import PICO_CSS
 
+PICO_OPTIONS = Options(
+    head=html.head(
+        html.link(PICO_CSS)
+        )
+    )
 
-def pico_run(app: Union[Component, Callable], head:Union[Component, Callable]=None):
+def pico_run(app: Union[Component, Callable], options=PICO_OPTIONS):
+    """Wrap the given app in a simple container and call the FastAPI server
 
-    if head is None:
-        head = html.link(PICO_CSS)
+    Args:
+        app (Union[Component, Callable]): User application
+        options (_type_, optional): Server options. Defaults to PICO_OPTIONS.
 
+    Returns:
+        _type_: _description_
+    """
     if isinstance(app, FunctionType):
         children = app()
     else:
@@ -26,4 +36,4 @@ def pico_run(app: Union[Component, Callable], head:Union[Component, Callable]=No
             )
         )
 
-    run(AppMain, options=ServerOptions(head))
+    run(AppMain, options=options)
