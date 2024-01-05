@@ -5,7 +5,7 @@ def var_name(obj: Any, namespace: Dict[str, Any]) -> str:
     """Return var name as a string
 
     Args:
-        obj (Any): Variable ty be named
+        obj (Any): Variable to be named
         namespace (Dict[str, Any]): _description_
 
     Returns:
