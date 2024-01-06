@@ -10,12 +10,6 @@ BOOTSTRAP_CSS = {
     }
 
 
-BOOTSTRAP_OPTIONS=Options(
-    head=html.head(
-        html.link(BOOTSTRAP_CSS),
-    )
-)
-
 # https://picocss.com/docs/
 
 PICO_CSS = {

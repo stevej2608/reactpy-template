@@ -1,4 +1,4 @@
-from reactpy_template.hello import AppMain
+from examples.hello import AppMain
 # from utils.pico_run import run
 from utils.fast_server import run
 from utils.find_port import find_available_port

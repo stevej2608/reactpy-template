@@ -10,7 +10,7 @@ from utils.logger import log, logging
 from utils.var_name import var_name
 
 from utils.assets import assets_api
-from utils.default_options import DEFAULT_OPTIONS
+from utils.header_options import DEFAULT_OPTIONS
 
 
 app = FastAPI(description="ReactPy", version="0.1.0")
