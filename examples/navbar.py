@@ -52,7 +52,7 @@ def NavLink(*children, href='#', disabled=False):
         )
 
 @component
-def NavDropdown(*children):
+def NavDropdown(*children, title="Undefined"):
     return html.li({'class_name': 'nav-item dropdown'},
         html.a({
             'class_name': 'nav-link dropdown-toggle',
@@ -60,6 +60,6 @@ def NavDropdown(*children):
             'role': 'button', 
             'data-bs-toggle': 'dropdown', 
             'aria-expanded': 'false'},
-            "Dropdown"),
+            title),
         html.ul({'class_name': 'dropdown-menu'}, *children)
     )
