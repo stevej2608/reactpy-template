@@ -35,5 +35,19 @@ def Nav(*children):
 
 
 @component
-def Item(*children):
-    return html.li({'class_name': 'nav-item'}, *children)
+def NavLink(*children, href='#', disabled=False):
+    state = 'disabled' if disabled else 'active'
+    return html.li({'class_name': 'nav-item'},
+        html.a({'class_name': f'nav-link {state}', 'aria-current': 'page', 'href': href},
+            *children
+            )
+        )
+
+@component
+def NavDropdown(*children):
+    return html.li({'class_name': 'nav-item'}, 
+        html.a({'class_name': 'nav-link dropdown-toggle', 'href': '#', 'role': 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false'}, "Dropdown"),
+        html.ul({'class_name': 'dropdown-menu'},
+                *children,
+        )
+    )
