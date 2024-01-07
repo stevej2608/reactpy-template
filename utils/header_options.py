@@ -47,6 +47,6 @@ DEFAULT_OPTIONS=Options(
 BOOTSTRAP_OPTIONS=Options(
     head=html.head(
         html.link(BOOTSTRAP_CSS),
-        # html.script({ 'src': 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js'})
+        html.script({ 'src': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js'})
     )
 )

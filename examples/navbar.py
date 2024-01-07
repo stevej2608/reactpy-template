@@ -13,13 +13,21 @@ def Navbar(*children):
 
 
 @component
-def Brand(href, *children):
+def Brand(*children, href='#'):
     return html.a({'class_name': 'navbar-brand', 'href': href}, *children)
 
 
 @component
 def Toggle():
-    return html.button({'class_name': 'navbar-toggler', 'type': 'button', 'data-bs-toggle': 'collapse', 'data-bs-target': '#navbarSupportedContent', 'aria-controls': 'navbarSupportedContent', 'aria-expanded': 'false', 'aria-label': 'Toggle navigation'},
+    return html.button({
+            'class_name': 'navbar-toggler',
+            'type': 'button',
+            'data-bs-toggle': 'collapse',
+            'data-bs-target': '#navbarSupportedContent',
+            'aria-controls': 'navbarSupportedContent',
+            'aria-expanded': 'false',
+            'aria-label':
+            'Toggle navigation'},
         html.span({'class_name': 'navbar-toggler-icon'})
     )
 
@@ -45,9 +53,13 @@ def NavLink(*children, href='#', disabled=False):
 
 @component
 def NavDropdown(*children):
-    return html.li({'class_name': 'nav-item'}, 
-        html.a({'class_name': 'nav-link dropdown-toggle', 'href': '#', 'role': 'button', 'data-bs-toggle': 'dropdown', 'aria-expanded': 'false'}, "Dropdown"),
-        html.ul({'class_name': 'dropdown-menu'},
-                *children,
-        )
+    return html.li({'class_name': 'nav-item dropdown'},
+        html.a({
+            'class_name': 'nav-link active dropdown-toggle',
+            'href': '#', 
+            'role': 'button', 
+            'data-bs-toggle': 'dropdown', 
+            'aria-expanded': 'false'},
+            "Dropdown"),
+        html.ul({'class_name': 'dropdown-menu'}, *children)
     )

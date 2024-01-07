@@ -12,27 +12,26 @@ from .navbar import Navbar, Brand, Toggle, Collapse, Nav, NavLink, NavDropdown
 @component
 def AppMain():
     return Navbar(
-        Brand('#', "Navbar"),
+        Brand("Navbar"),
         Toggle(),
         Collapse(
             Nav(
                 NavLink("Home"),
                 NavLink("Link"),
                 NavDropdown(
-                    html.ul({'class_name': 'dropdown-menu'},
-                        html.li(
-                            html.a({'class_name': 'dropdown-item', 'href': '#'}, "Action")
-                        ),
-                        html.li(
-                            html.a({'class_name': 'dropdown-item', 'href': '#'}, "Another action")
-                        ),
-                        html.li(
-                            html.hr({'class_name': 'dropdown-divider'})
-                        ),
-                        html.li(
-                            html.a({'class_name': 'dropdown-item', 'href': '#'}, "Something else here")
-                        )
+                    html.li(
+                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "Action")
+                    ),
+                    html.li(
+                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "Another action")
+                    ),
+                    html.li(
+                        html.hr({'class_name': 'dropdown-divider'})
+                    ),
+                    html.li(
+                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "Something else here")
                     )
+
                 ),
                 NavLink("Disabled", disabled=True)
             ),

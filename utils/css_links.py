@@ -5,7 +5,7 @@ from reactpy.backend.fastapi import Options
 
 BOOTSTRAP_CSS = {
         'rel': 'stylesheet',
-        'href': 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',
+        'href': 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css',
         'crossorigin': 'anonymous'
     }
 
