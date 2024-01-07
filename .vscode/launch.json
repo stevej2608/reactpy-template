@@ -25,11 +25,11 @@
     },
 
     {
-      "name": "1b. examples/navbar.py",
+      "name": "1b. examples/navbar_example.py",
       "type": "python",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "module": "examples.navbar",
+      "module": "examples.navbar_example",
       "args": [
         "runserver"
       ],
