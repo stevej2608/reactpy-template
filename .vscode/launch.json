@@ -10,9 +10,6 @@
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "module": "examples.hello",
-      "args": [
-        "runserver"
-      ],
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "justMyCode": false,
@@ -30,6 +27,40 @@
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "module": "examples.navbar_example",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false,
+      "serverReadyAction": {
+        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
+        "uriFormat": "%s/",
+        "action": "debugWithChrome",
+        "killOnServerStop": true
+      }
+    },    
+
+    {
+      "name": "1c. examples/navbar_working.py",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "module": "examples.navbar_working",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false,
+      "serverReadyAction": {
+        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
+        "uriFormat": "%s/",
+        "action": "debugWithChrome",
+        "killOnServerStop": true
+      }
+    },  
+    
+    {
+      "name": "1c. tmp/project-management-app",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceRoot}/tmp/project-management-app",
+      "program": "main.py",
       "args": [
         "runserver"
       ],
@@ -42,7 +73,7 @@
         "action": "debugWithChrome",
         "killOnServerStop": true
       }
-    },    
+    }
 
 
     // https://stackoverflow.com/a/65292380/489239

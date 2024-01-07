@@ -55,7 +55,7 @@ def NavLink(*children, href='#', disabled=False):
 def NavDropdown(*children):
     return html.li({'class_name': 'nav-item dropdown'},
         html.a({
-            'class_name': 'nav-link active dropdown-toggle',
+            'class_name': 'nav-link dropdown-toggle',
             'href': '#', 
             'role': 'button', 
             'data-bs-toggle': 'dropdown', 
