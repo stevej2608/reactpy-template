@@ -1,53 +1,72 @@
-from dash import Dash, html
-import dash_bootstrap_components as dbc
-from dash_spa import logging
+from reactpy import component, html
+from reactpy.core.component import Component
+from reactpy_router import route, simple
+from utils.options import BOOTSTRAP_OPTIONS
+from utils.fast_server import run
 
-from dash_spa import DashSPA, page_container
-from dash_spa.components import NavBar, NavbarBrand, NavbarLink, Footer
-from server import serve_app
+from components.navbar import SimpleNavbar, Brand, NavLink
+from .pages import HomePage,  Page1, Page2, PageNotFound
 
-from .pages import page1, page2
+NAV_BAR_ITEMS = {
+    'brand' : Brand(' ReactPy', href='/'),
+    'left' : [
+        NavLink("Page 1", href='/page1'),
+        NavLink("Page 2", href='/page2'),
+    ]
+}
 
-def create_dash():
-    app = DashSPA( __name__,external_stylesheets=[dbc.themes.BOOTSTRAP])
-    return app
+@component
+def TopBar():
+    return html.header(
+        SimpleNavbar(**NAV_BAR_ITEMS),
+        html.br()
+        )
 
-def create_app(dash_factory) -> Dash:
-    app = dash_factory()
+@component
+def Footer(text):
+    return html.footer({'class_name': 'footer mt-auto'},
+        html.div({'class_name': 'spa_footer'},
+            html.p({'id': 'footer', 'class_name': 'text-center font-italic', 'style': {'marginTop': 10}}, text)
+        )
+    )
 
-    NAV_BAR_ITEMS = {
-        'brand' : NavbarBrand(' DashSPA','/'),
-        'left' : [
-            NavbarLink(page1, id='nav-page1'),
-            NavbarLink(page2, id='nav-page2'),
-        ]
-    }
 
-    navbar = NavBar(NAV_BAR_ITEMS)
-    footer = Footer('SPA/Examples')
+@component
+def PageContainer(page):
+    return html.div({'class_name': 'body'},
+        html.header(
+            TopBar(),
+            html.br()
+            ),
+        html.main({'role': 'main', 'class_name': 'd-flex'},
+            html.div({'class_ame': 'container d-flex flex-column flex-grow-1'},
+                html.div({'class_name': 'row'},
+                    html.div({'class_name': "col-md-12"}, page()),
+                )
+            )
+        ),
+        Footer('ReactPy')
+    )
 
-    def layout():
-            return html.Div([
-                html.Header([
-                    navbar.layout(),
-                    html.Br()
-                    ]),
-                html.Main([
-                    html.Div([
-                        html.Div([
-                            html.Div(page_container, className="col-md-12"),
-                        ], className='row')
-                    ], className='container d-flex flex-column flex-grow-1'),
-                ], role='main', className='d-flex'),
-                html.Footer(footer.layout(), className='footer mt-auto')
-            ], className='body')
 
-    app.layout = layout
-    return app
+@component
+def AppMain():
 
-# python -m examples.multipage.app
+    def page_route(path, page):
+        element = PageContainer(page)
+        return route(path, element)
+
+    return html.div(
+        simple.router(
+            page_route("/",HomePage),
+            page_route("/page1",Page1),
+            page_route("/page2", Page2),
+            route("*", PageNotFound())
+        )
+    )
+
+
+# python -m examples.multi_page_example.app
 
 if __name__ == "__main__":
-    # logging.setLevel("INFO")
-    app = create_app(create_dash)
-    serve_app(app, debug=False)
+    run(AppMain, options=BOOTSTRAP_OPTIONS)

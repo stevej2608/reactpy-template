@@ -2,7 +2,7 @@ from reactpy import component, html
 
 from utils.options import BOOTSTRAP_OPTIONS
 from utils.fast_server import run
-from .navbar import Navbar, Brand, Toggle, Collapse, Nav, NavLink, NavDropdown, DropdownItem, DropDownDivider
+from components.navbar import Navbar, Brand, Toggle, Collapse, Nav, NavLink, NavDropdown, DropdownItem, DropDownDivider
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
 

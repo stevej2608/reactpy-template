@@ -7,9 +7,9 @@ def big_center(text, id=None):
     return html.h2(attr, text) if id else html.h2(attr, text)
 
 @component
-def layout():
+def Layout():
     return html.div([
         big_center('Multi-page Example'),
         big_center('+'),
-        big_center('Page 1', id="page"),
+        big_center('Page 2', id="page"),
     ])

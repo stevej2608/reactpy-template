@@ -39,11 +39,11 @@
     },    
 
     {
-      "name": "1c. examples/navbar_working.py",
+      "name": "1c. examples/multi_page_example/app.py",
       "type": "python",
       "request": "launch",
       "cwd": "${workspaceRoot}",
-      "module": "examples.navbar_working",
+      "module": "examples.multi_page_example.app",
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "justMyCode": false,

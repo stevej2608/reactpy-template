@@ -1,4 +1,6 @@
+from typing import List
 from reactpy import component, html
+from reactpy.core.types import VdomDict
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
 
@@ -72,4 +74,18 @@ def NavDropdown(*children, title="Undefined"):
             'aria-expanded': 'false'},
             title),
         html.ul({'class_name': 'dropdown-menu'}, *children)
+    )
+
+
+# pylint: disable=dangerous-default-value
+
+@component
+def SimpleNavbar(brand: VdomDict = html.div(), left: List[VdomDict]=[], right: List[VdomDict]=[]):
+    return Navbar(
+        brand,
+        Toggle(),
+        Collapse(
+            Nav(*left),
+            Nav(*right)
+        )
     )
