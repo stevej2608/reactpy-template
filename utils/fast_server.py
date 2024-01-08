@@ -1,16 +1,19 @@
 from typing import Callable
 import sys
-
+import os
+import inspect
+from pathlib import Path
 import uvicorn
 from fastapi import FastAPI
+from reactpy import html
 from reactpy.core.component import Component
-from reactpy.backend.fastapi import configure, Options
+from reactpy.backend.fastapi import configure, Options as FastApiOptions
 
 from utils.logger import log, logging
 from utils.var_name import var_name
 
 from utils.assets import assets_api
-from utils.options import DEFAULT_OPTIONS
+from utils.options import Options, DEFAULT_OPTIONS
 
 
 app = FastAPI(description="ReactPy", version="0.1.0")
@@ -46,9 +49,17 @@ def run(AppMain: Callable[[], Component],
 
     # Mount any fastapi end points here
 
-    app.mount('/static', assets_api)
+    if options.asset_folder == 'assets':
+        asset_folder = Path(inspect.stack()[1].filename).parent.relative_to(os.getcwd())
+        options.asset_folder = str(asset_folder)
 
-    configure(app, AppMain, options=options)
+    app.mount("/" + options.asset_root, assets_api(options))
+
+    opt = FastApiOptions(
+       head=html.head(*options.head)
+    )
+
+    configure(app, AppMain, options=opt)
 
     app_path = _app_path(app)
 

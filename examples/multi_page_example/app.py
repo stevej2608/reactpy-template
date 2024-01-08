@@ -1,7 +1,7 @@
 from reactpy import component, html
 from reactpy.core.component import Component
 from reactpy_router import route, simple
-from utils.options import BOOTSTRAP_OPTIONS
+from utils.options import BOOTSTRAP_OPTIONS, Options
 from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
@@ -34,10 +34,12 @@ def Footer(text):
 @component
 def PageContainer(page):
     return html.div({'class_name': 'body'},
+                    
         html.header(
             TopBar(),
             html.br()
             ),
+
         html.main({'role': 'main', 'class_name': 'd-flex'},
             html.div({'class_ame': 'container d-flex flex-column flex-grow-1'},
                 html.div({'class_name': 'row'},
@@ -45,6 +47,7 @@ def PageContainer(page):
                 )
             )
         ),
+
         Footer('ReactPy')
     )
 
@@ -69,4 +72,9 @@ def AppMain():
 # python -m examples.multi_page_example.app
 
 if __name__ == "__main__":
-    run(AppMain, options=BOOTSTRAP_OPTIONS)
+
+    opt = Options(
+        head = ['assets/multipage.css']
+    )
+
+    run(AppMain, options=BOOTSTRAP_OPTIONS + opt)
