@@ -1,5 +1,6 @@
-from typing import List, Any, Optional
-from pydantic import BaseModel, validator
+from typing import List, Any
+from pydantic import BaseModel, validator, ValidationError
+from reactpy.core.types import VdomDict
 from reactpy import html
 
 
@@ -28,6 +29,14 @@ META_COLOR = {"theme-color": "viewport", "content": "#000000"}
 
 
 class Options(BaseModel):
+    """options to be passed to the seb server
+
+    Args:
+        head (List[Any]): List of page header options, css, script, title, etc
+        asset_root (str): root path for assets (static, assets, etc). Default 'assets'
+        asset_folder (str): path to assets folder relative to application root
+
+    """
     head: List[Any] = []
     asset_root: str = 'assets'
     asset_folder: str = 'assets'
@@ -35,7 +44,7 @@ class Options(BaseModel):
 
     @validator("head")
     @classmethod
-    def validate_email(cls, value):
+    def validate_head(cls, value):
         vals = []
         for v in value:
             if isinstance(v, str):
@@ -45,8 +54,15 @@ class Options(BaseModel):
                 elif v.endswith('.js'):
                     script = html.script({ "src": v})
                     vals.append(script)
-            else:
-                vals.append(v)
+                else:
+                    raise ValidationError("Invalid asset extension expected [.css|.js]")
+
+            elif isinstance(v, dict):
+                if v['tagName'] in ['link', 'script', 'meta', 'title']:
+                    vals.append(v)
+                else:
+                    raise ValidationError(f"Type {v['tagName'] } cannot be included in header")
+
         return vals
 
 

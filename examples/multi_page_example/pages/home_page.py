@@ -39,6 +39,7 @@ def Layout():
         html.div({'class_name': 'row text-center'},
             card('Pages', 'Support for Single Page Applications (SPA), '),
             card('Navbar', 'Includes an optional NAVBAR, configured by a simple dictionary'),
-            card('Components', 'Easily create reusable components')
+            card('Components', 'Easily create reusable components'),
+            card('Server Agnostic', 'Can be used with FastAPI, Flask, Tornado, Sanic')
         )
     )

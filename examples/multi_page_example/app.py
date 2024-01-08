@@ -1,5 +1,4 @@
 from reactpy import component, html
-from reactpy.core.component import Component
 from reactpy_router import route, simple
 from utils.options import BOOTSTRAP_OPTIONS, Options
 from utils.fast_server import run
@@ -41,7 +40,7 @@ def PageContainer(page):
             ),
 
         html.main({'role': 'main', 'class_name': 'd-flex'},
-            html.div({'class_ame': 'container d-flex flex-column flex-grow-1'},
+            html.div({'class_name': 'container d-flex flex-column flex-grow-1'},
                 html.div({'class_name': 'row'},
                     html.div({'class_name': "col-md-12"}, page()),
                 )
