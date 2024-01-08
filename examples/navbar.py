@@ -1,7 +1,17 @@
 from reactpy import component, html
 
+# https://getbootstrap.com/docs/5.3/components/navbar/
 
-# https://react-bootstrap.netlify.app/docs/components/navbar
+@component
+def DropdownItem(*children, href='#'):
+    return html.li(
+        html.a({'class_name': 'dropdown-item', 'href': href}, *children)
+    )
+
+@component
+def DropDownDivider():
+    return html.li(html.hr({'class_name': 'dropdown-divider'}))
+
 
 @component
 def Navbar(*children):

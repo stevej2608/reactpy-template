@@ -2,10 +2,9 @@ from reactpy import component, html
 
 from utils.options import BOOTSTRAP_OPTIONS
 from utils.fast_server import run
-from .navbar import Navbar, Brand, Toggle, Collapse, Nav, NavLink, NavDropdown
+from .navbar import Navbar, Brand, Toggle, Collapse, Nav, NavLink, NavDropdown, DropdownItem, DropDownDivider
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
-# https://react-bootstrap.netlify.app/docs/components/navbar
 
 
 @component
@@ -14,16 +13,6 @@ def Search():
         html.input({'class_name': 'form-control me-2', 'type': 'search', 'placeholder': 'Search', 'aria-label': 'Search'}),
         html.button({'class_name': 'btn btn-outline-success', 'type': 'submit'}, "Search")
     )
-
-@component
-def DropdownItem(*children, href='#'):
-    return html.li(
-        html.a({'class_name': 'dropdown-item', 'href': href}, *children)
-    )
-
-@component
-def DropDownDivider():
-    return html.li(html.hr({'class_name': 'dropdown-divider'}))
 
 @component
 def AppMain():
