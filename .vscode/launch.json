@@ -49,7 +49,7 @@
       "justMyCode": false,
       "serverReadyAction": {
         "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
+        "uriFormat": "%s/tickers",
         "action": "debugWithChrome",
         "killOnServerStop": true
       }

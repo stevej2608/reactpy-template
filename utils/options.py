@@ -29,7 +29,7 @@ META_COLOR = {"theme-color": "viewport", "content": "#000000"}
 
 
 class Options(BaseModel):
-    """options to be passed to the seb server
+    """options to be passed to the web server
 
     Args:
         head (List[Any]): List of page header options, css, script, title, etc

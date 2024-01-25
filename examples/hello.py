@@ -1,6 +1,4 @@
-from reactpy import component, html
-from utils.pico_run import pico_run
-
+from reactpy import component, html, run
 
 @component
 def AppMain():
@@ -8,7 +6,7 @@ def AppMain():
         html.h2('Hello, World!')
     )
 
-# python -m examples.hello
+# python usage.py
 
 if __name__ == "__main__":
-    pico_run(AppMain)
+    run(AppMain)
