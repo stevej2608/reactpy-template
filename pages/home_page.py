@@ -1,4 +1,4 @@
-from reactpy import html, component, utils
+from reactpy import html, component
 from components.markdown import Markdown
 
 

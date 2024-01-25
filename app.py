@@ -4,7 +4,7 @@ from utils.options import BOOTSTRAP_OPTIONS, Options
 from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
-from .pages import HomePage,  Page1, Page2, TickerPage, PageNotFound
+from pages import HomePage,  Page1, Page2, TickerPage, PageNotFound
 
 NAV_BAR_ITEMS = {
     'brand' : Brand(' Reactpy/SPA', href='/'),
@@ -34,7 +34,7 @@ def Footer(text):
 @component
 def PageContainer(page):
     return html.div({'class_name': 'body'},
-             
+
         html.header(
             TopBar(),
             html.br()
@@ -70,7 +70,7 @@ def AppMain():
     )
 
 
-# python -m examples.multi_page_example.app
+# python app.py
 
 if __name__ == "__main__":
 
