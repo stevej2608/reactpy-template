@@ -7,7 +7,7 @@ from components.navbar import SimpleNavbar, Brand, NavLink
 from .pages import HomePage,  Page1, Page2, TickerPage, PageNotFound
 
 NAV_BAR_ITEMS = {
-    'brand' : Brand(' ReactPy', href='/'),
+    'brand' : Brand(' Reactpy/SPA', href='/'),
     'left' : [
         NavLink("Page 1", href='/page1'),
         NavLink("Page 2", href='/page2'),
@@ -34,7 +34,7 @@ def Footer(text):
 @component
 def PageContainer(page):
     return html.div({'class_name': 'body'},
-                    
+             
         html.header(
             TopBar(),
             html.br()
@@ -48,7 +48,7 @@ def PageContainer(page):
             )
         ),
 
-        Footer('ReactPy')
+        Footer('Reactpy/SPA')
     )
 
 
@@ -74,8 +74,18 @@ def AppMain():
 
 if __name__ == "__main__":
 
+    # For the ticker page only
+
+    PLOTLY_JS = html.script({
+        'src': 'https://cdn.plot.ly/plotly-latest.min.js',
+        'charset': 'utf-8'
+    })
+
     opt = Options(
-        head = ['assets/multipage.css']
+        head = [
+            PLOTLY_JS,
+            'assets/multipage.css'
+            ]
     )
 
     run(AppMain, options=BOOTSTRAP_OPTIONS + opt)

@@ -8,7 +8,7 @@ def Layout():
                 html.div({'class_name': 'col-md-12 text-center'},
                     html.span({'class_name': 'display-1 d-block'}, "404"),
                     html.div({'class_name': 'mb-4 lead'}, "The page you are looking for was not found."),
-                    html.a({'href': 'https://www.totoprayogo.com/#', 'class_name': 'btn btn-link'}, "Back to Home")
+                    html.a({'href': '/', 'class_name': 'btn btn-link'}, "Back to Home")
                 )
             )
         )

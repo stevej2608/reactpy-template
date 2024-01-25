@@ -1,8 +1,9 @@
-from reactpy import html, component
+from reactpy import html, component, utils
+from components.markdown import Markdown
 
 
-header_text = """
-ReactPy is a library for building user interfaces in Python without 
+text = """
+[ReactPy](https://reactpy.dev/docs/index.html) is a library for building user interfaces in Python without 
 Javascript. ReactPy interfaces are made from components which 
 look and behave similarly to those found in ReactJS. Designed with 
 simplicity in mind, ReactPy can be used by those without 
@@ -35,7 +36,7 @@ def card(title, text):
 @component
 def Layout():
     return html.div({'class_name': 'container'},
-        jumbotron_header('Welcome to ReactPy', header_text),
+        jumbotron_header('ReactPy SPA Template', Markdown(text)),
         html.div({'class_name': 'row text-center'},
             card('Pages', 'Support for Single Page Applications (SPA), '),
             card('Navbar', 'Includes an optional NAVBAR, configured by a simple dictionary'),
