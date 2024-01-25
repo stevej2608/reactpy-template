@@ -5,7 +5,24 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "1a. examples/hello.py",
+      "name": "1a. app.py",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "program": "${workspaceRoot}/app.py",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false,
+      "serverReadyAction": {
+        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
+        "uriFormat": "%s/tickers",
+        "action": "debugWithChrome",
+        "killOnServerStop": true
+      }
+    },  
+
+    {
+      "name": "1b. examples/hello.py",
       "type": "python",
       "request": "launch",
       "cwd": "${workspaceRoot}",
@@ -22,7 +39,7 @@
     },
 
     {
-      "name": "1b. examples/navbar_example.py",
+      "name": "1c. examples/navbar_example.py",
       "type": "python",
       "request": "launch",
       "cwd": "${workspaceRoot}",
@@ -37,44 +54,7 @@
         "killOnServerStop": true
       }
     },    
-
-    {
-      "name": "1c. examples/multi_page_example/app.py",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "module": "examples.multi_page_example.app",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/tickers",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    },  
-    
-    {
-      "name": "1c. tmp/project-management-app",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}/tmp/project-management-app",
-      "program": "main.py",
-      "args": [
-        "runserver"
-      ],
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    }
-
+ 
 
     // https://stackoverflow.com/a/65292380/489239
     {

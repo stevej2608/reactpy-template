@@ -1,14 +1,12 @@
 import sys
-from io import StringIO
-import plotly.graph_objects as go
+
 import pandas as pd
 import colorlover as cl
 from reactpy import html, component, event, use_state, utils
 from reactpy_select import Select, ActionMeta
 
-from utils.fast_server import run
 from utils.options import Options
-
+from dash import dcc
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App
 #
@@ -84,6 +82,7 @@ def update_graph(tickers=None):
             bb_bands = bbands(dff.Close)
             bollinger_traces = [{
                 'x': dff['Date'], 'y': y,
+                'type': 'scatter',
                 'mode': 'lines',
                 'line': {'width': 2, 'color': colorscale[(i*2) % len(colorscale)]},
                 'hoverinfo': 'none',
@@ -92,36 +91,16 @@ def update_graph(tickers=None):
                 'name': f'{ticker} - Bollinger Bands'
             } for i, y in enumerate(bb_bands)]
 
-            # https://plotly.com/python/candlestick-charts/
-
-            fig = go.Figure(data=[
-                        *[go.Scatter(t) for t in bollinger_traces],
-                        go.Candlestick(candlestick)
-                    ])
-
-            fig.update_layout(
-                legend=dict(
-                    bgcolor='White',
-                    yanchor="top",
-                    y=1.00,
-                    xanchor="left",
-                    x=0.00
-                ),
-                plot_bgcolor='rgba(0, 0, 0, 0)',
-                paper_bgcolor='rgba(0, 0, 0, 0)',
-                margin={'b': 0, 'r': 10, 'l': 60, 't': 20},
-            )
-
-            fig.update_xaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
-            fig.update_yaxes(showgrid=True, gridwidth=1, gridcolor='LightGray')
-
-            # Create an html object in memory from fig.
-
-            buffer = StringIO()
-            fig.write_html(buffer, include_plotlyjs='cdn', config={'displayModeBar': False})
-            fig_html = buffer.getvalue()
-
-            graphs.append(utils.html_to_vdom(fig_html))
+            graphs.append(dcc.Graph(
+                id=ticker,
+                figure={
+                    'data': [candlestick] + bollinger_traces,
+                    'layout': {
+                        'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
+                        'legend': {'x': 0}
+                    }
+                }
+            ))
 
     return html.div(graphs)
 
