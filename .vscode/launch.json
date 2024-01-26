@@ -53,7 +53,24 @@
         "action": "debugWithChrome",
         "killOnServerStop": true
       }
-    },    
+    }, 
+    
+    {
+      "name": "1d. examples/table_example.py",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "module": "examples.table_example",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false,
+      "serverReadyAction": {
+        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
+        "uriFormat": "%s/",
+        "action": "debugWithChrome",
+        "killOnServerStop": true
+      }
+    }, 
  
 
     // https://stackoverflow.com/a/65292380/489239

@@ -18,6 +18,7 @@ plotly = "^5.18.0"
 reactpy-select = {version = "^0.0.1", source = "pypicloud"}
 colorlover = "^0.3.0"
 mistune = "^3.0.2"
+reactpy-table = {version = "0.0.2", source = "pypicloud"}
 
 
 [[tool.poetry.source]]
