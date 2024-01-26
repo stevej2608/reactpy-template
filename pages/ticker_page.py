@@ -92,14 +92,14 @@ def update_graph(tickers=None):
             } for i, y in enumerate(bb_bands)]
 
             graphs.append(dcc.Graph(
-                id=ticker,
                 figure={
                     'data': [candlestick] + bollinger_traces,
                     'layout': {
                         'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
                         'legend': {'x': 0}
                     }
-                }
+                },
+                config={'displayModeBar': False}
             ))
 
     return html.div(graphs)

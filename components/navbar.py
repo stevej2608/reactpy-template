@@ -1,5 +1,6 @@
 from typing import List
 from reactpy import component, html
+from reactpy_router import link
 from reactpy.core.types import VdomDict
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
@@ -56,6 +57,16 @@ def Nav(*children):
 
 @component
 def NavLink(*children, href='#', disabled=False):
+    state = 'disabled' if disabled else 'active'
+    return html.li({'class_name': 'nav-item'},
+        link(*children,
+             to=href,
+             **{'class_name': f'nav-link {state}', 'aria-current': 'page'}
+            )
+        )
+
+@component
+def XNavLink(*children, href='#', disabled=False):
     state = 'disabled' if disabled else 'active'
     return html.li({'class_name': 'nav-item'},
         html.a({'class_name': f'nav-link {state}', 'aria-current': 'page', 'href': href},

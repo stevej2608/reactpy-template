@@ -4,14 +4,17 @@ from utils.options import BOOTSTRAP_OPTIONS, Options
 from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
-from pages import HomePage,  Page1, Page2, TickerPage, PageNotFound
+
+from pages import TICKER_SLUG, SOLAR_SLUG, GLOBAL_WARMING_SLUG
+from pages import HomePage,  Page1, Page2, TickerPage, PageNotFound, WarmingPage
 
 NAV_BAR_ITEMS = {
     'brand' : Brand(' Reactpy/SPA', href='/'),
     'left' : [
         NavLink("Page 1", href='/page1'),
         NavLink("Page 2", href='/page2'),
-        NavLink("Tickers", href='/tickers'),
+        NavLink("Tickers", href=TICKER_SLUG),
+        NavLink("Warming", href=GLOBAL_WARMING_SLUG),
     ]
 }
 
@@ -64,7 +67,8 @@ def AppMain():
             page_route("/",HomePage),
             page_route("/page1",Page1),
             page_route("/page2", Page2),
-            page_route("/tickers", TickerPage),
+            page_route(TICKER_SLUG, TickerPage),
+            page_route(GLOBAL_WARMING_SLUG, WarmingPage),
             route("*", PageNotFound())
         )
     )
