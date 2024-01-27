@@ -71,6 +71,23 @@
         "killOnServerStop": true
       }
     }, 
+
+    {
+      "name": "1e. examples/bootstrap_table.py",
+      "type": "python",
+      "request": "launch",
+      "cwd": "${workspaceRoot}",
+      "module": "examples.bootstrap_table",
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "justMyCode": false,
+      "serverReadyAction": {
+        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
+        "uriFormat": "%s/",
+        "action": "debugWithChrome",
+        "killOnServerStop": true
+      }
+    },    
  
 
     // https://stackoverflow.com/a/65292380/489239
