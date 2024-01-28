@@ -1,47 +1,14 @@
 from typing import List, cast
-from pydantic import BaseModel
 from reactpy import component, html, use_state, use_memo, event
 from reactpy_table import use_reactpy_table, Column, Columns, ColumnSort, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
-from utils.make_data import make_data
-from utils.fast_server import run
+
+from utils.logger import log, logging
+from utils.pico_run import pico_run
 from utils.reactpy_helpers import For
 
-from utils.options import BOOTSTRAP_OPTIONS
-
+from .data.products import Product, COLS, make_products
 
 # https://codesandbox.io/p/devbox/tanstack-table-example-expanding-jr4nn3?embed=1
-
-PRODUCTS = [
-    {"name": "Education Dashboard", "description": "Html templates", "technology": "Angular", "id": "#194556", "price": "$149"},
-    {"name": "React UI Kit", "description": "Html templates", "technology": "React JS", "id": "#623232", "price": "$129"},
-    {"name": "DashboardPro", "description": "Html templates", "technology": "SolidJS", "id": "#194334", "price": "$449"},
-    {"name": "Charts Package", "description": "Fancy charts", "technology": "Angular", "id": "#323323", "price": "$129"},
-    {"name": "Server Render", "description": "NodeJS", "technology": "Typescript", "id": "#994336", "price": "$749"},
-    {"name": "Accounts Package", "description": "NodeJS", "technology": "Typescript", "id": "#144256", "price": "$779"},
-    {"name": "Grav CMS", "description": "Content Management", "technology": "PHP", "id": "#624478", "price": "$29"},
-    {"name": "Wordpress", "description": "Content Management", "technology": "PHP", "id": "#192656", "price": "$55"}
-]
-
-COLS: Columns = [
-    Column(name='index', label='#'),
-    Column(name='name', label='Name'),
-    Column(name='description', label='Description'),
-    Column(name='technology', label='Technology'),
-    Column(name='id', label='ID'),
-    Column(name='price', label='Price')
-    ]
-
-class Product(BaseModel):
-    index: int
-    name: str
-    description: str
-    technology: str
-    id: str
-    price: str
-
-def make_products(number: int) -> List[Product] :
-    return make_data(number, PRODUCTS, Product)
-
 # https://medium.com/@jordammendes/build-powerfull-tables-in-reactjs-with-tanstack-9d57a3a63e35
 # https://tanstack.com/table/v8/docs/examples/react/expanding
 
@@ -234,4 +201,5 @@ def AppMain():
 # python -m examples.table_example
 
 if __name__ == "__main__":
-    run(AppMain, options=BOOTSTRAP_OPTIONS)
+    log.setLevel(logging.INFO)
+    pico_run(AppMain)

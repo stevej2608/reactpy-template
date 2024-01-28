@@ -13,14 +13,14 @@ from utils.logger import log, logging
 from utils.var_name import var_name
 
 from utils.assets import assets_api
-from utils.options import Options, DEFAULT_OPTIONS
+from utils.options import ServerOptions, DEFAULT_OPTIONS
 
 
 app = FastAPI(description="ReactPy", version="0.1.0")
 
 
 def run(AppMain: Callable[[], Component],
-        options:Options=DEFAULT_OPTIONS,
+        options:ServerOptions=DEFAULT_OPTIONS,
         host='127.0.0.1',
         port=8000,
         **kwargs) -> None:

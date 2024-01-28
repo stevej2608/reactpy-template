@@ -2,16 +2,16 @@ from typing import Union, Callable
 from types import FunctionType
 from reactpy import component, html
 from reactpy.core.component import Component
-from reactpy.backend.fastapi import Options
 
-from utils.fast_server import run
-from utils.css_links import PICO_CSS
+from .css_links import PICO_CSS
+from .fast_server import run
+from .options import ServerOptions
 
-PICO_OPTIONS = Options(
-    head=html.head(
+PICO_OPTIONS = ServerOptions(
+    head=[
         html.link(PICO_CSS)
-        )
-    )
+    ]
+)
 
 def pico_run(app: Union[Component, Callable], options=PICO_OPTIONS):
     """Wrap the given app in a simple container and call the FastAPI server
