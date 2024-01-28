@@ -1,8 +1,8 @@
 from typing import List
 from reactpy import component, html, use_memo, event
-from reactpy_table import use_reactpy_table, Column, Table, Options, Paginator, SimplePaginator, SimpleColumnSort, SimpleTableSearch
+from reactpy_table import use_reactpy_table, Column, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
 
-from components.paginator import EllipsesPaginator
+from components.ellipses_paginator import EllipsesPaginator
 
 from utils.fast_server import run
 from utils.reactpy_helpers import For
@@ -10,7 +10,7 @@ from utils.bootstrap_options import BOOTSTRAP_OPTIONS
 
 from .data.products import Product, COLS, make_products
 
-# reactPy clone of the following bootstrap table example, see:
+# ReactPy clone of the following bootstrap table example, see:
 #
 #   https://github.com/wenzhixin/bootstrap-table
 #   https://github.com/wenzhixin/bootstrap-table-examples
@@ -53,7 +53,7 @@ class CustomPaginator(EllipsesPaginator):
                 try:
                     self.paginator.set_page_index(page - 1)
                 except Exception:
-                    ...
+                    pass # Ignore click on ellipses
 
         cls = 'item'
         if active:
@@ -93,12 +93,12 @@ def TablePaginator(paginator: Paginator):
                 For(PageOption, sizes)
             )
         )
-    
+
     @component
     def PaginatorBar():
-        paginator_ui = CustomPaginator(paginator)
+        paginator_ui = CustomPaginator(paginator, adjacents=1)
         return html.ul({'class_name': 'pagination'},
-            *paginator_ui.select(adjacents=1)
+            *paginator_ui.select()
         )
 
     start = paginator.page_index * paginator.page_size + 1
@@ -119,15 +119,32 @@ def TablePaginator(paginator: Paginator):
 
 
 @component
-def Toolbar():
+def Search(search: TableSearch):
+
+    @event
+    def on_change(event):
+        text = event['currentTarget']['value']
+        search.table_search(text)
+
+
+    return html.div({'class_name': 'input-group'},
+        html.input({'class_name': 'form-control search-input',
+                    'type': 'search',
+                    'aria-label': 'Search',
+                    'onchange': on_change,
+                    'placeholder': 'Search',
+                    'autocomplete': 'off'}),
+        html.button({'class_name': 'btn btn-secondary', 'type': 'button', 'name': 'clearSearch', 'title': 'Clear Search'},
+            html.i({'class_name': "bi bi-trash"})
+        )
+    )
+
+
+@component
+def Toolbar(search):
     return html.div({'class_name': 'fixed-table-toolbar'},
         html.div({'class_name': 'float-right search btn-group'},
-            html.div({'class_name': 'input-group'},
-                html.input({'class_name': 'form-control search-input', 'type': 'search', 'aria-label': 'Search', 'placeholder': 'Search', 'autocomplete': 'off'}),
-                html.button({'class_name': 'btn btn-secondary', 'type': 'button', 'name': 'clearSearch', 'title': 'Clear Search'},
-                    html.i({'class_name': "bi bi-trash"})
-                )
-            )
+            search
         )
     )
 
@@ -214,11 +231,13 @@ def AppMain():
 
     # Define the table UI
 
+    search = Search(table.search)
+
     return html.div(
         # Header(),
         html.div({'id': 'example'},
             html.div({'class_name': 'bootstrap-table bootstrap5'},
-                Toolbar(),
+                Toolbar(search),
                 ProductsTable(table),
                 TablePaginator(table.paginator),
             ),

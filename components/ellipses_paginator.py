@@ -33,7 +33,8 @@ class EllipsesPaginator:
     PREVIOUS = 'Previous'
     NEXT = 'Next'
 
-    def __init__(self, paginator:Paginator):
+    def __init__(self, paginator:Paginator, adjacents=2):
+        self.adjacents = adjacents
         self.paginator = paginator
 
 
@@ -59,7 +60,7 @@ class EllipsesPaginator:
         return element
 
 
-    def select(self, adjacents=2) -> List[html.li]:
+    def select(self) -> List[html.li]:
         """Return pagination child UI elements for given active page
 
         Args:
@@ -74,6 +75,7 @@ class EllipsesPaginator:
         page = self.paginator.page_index + 1
         pagination = []
         last_page = self.paginator.page_count
+        adj = self.adjacents
 
         def emit(pge, disabled=False):
             active = pge == page
@@ -91,24 +93,24 @@ class EllipsesPaginator:
 
         # Test to see if we have enough pages to bother breaking it up
 
-        if last_page < 7 + (adjacents * 2):
+        if last_page < 7 + (adj * 2):
             for i in range(1, last_page+1):
                 pagination += emit(i, i == page)
-        elif last_page > 5 + (adjacents * 2):
+        elif last_page > 5 + (adj * 2):
 
             # Test to see if we're close to beginning. If so only hide later pages
 
-            if page < 2 + (adjacents * 2):
+            if page < 2 + (adj * 2):
 
                 # eg, PREVIOUS 1 [2] 3 4 5 6 7 ... 19 20 NEXT
 
-                for i in range(1, 5 + (adjacents * 2)):
+                for i in range(1, 5 + (adj * 2)):
                     pagination += emit(i, i == page)
 
                 pagination += emit('...', disabled=True)
                 pagination += last_pages
 
-            elif page < last_page - (1 + adjacents * 2):
+            elif page < last_page - (1 + adj * 2):
 
                 # We're in the middle hide some front and some back
                 # eg, PREVIOUS 1 2 ... 5 6 [7] 8 9 ... 19 20 NEXT
@@ -116,7 +118,7 @@ class EllipsesPaginator:
                 pagination += first_pages
                 pagination += emit('...', disabled=True)
 
-                for i in range(page - adjacents, page + adjacents + 1):
+                for i in range(page - adj, page + adj + 1):
                     pagination += emit(i, i == page)
 
                 pagination += emit('...', disabled=True)
@@ -129,7 +131,7 @@ class EllipsesPaginator:
                 pagination += first_pages
                 pagination += emit('...', disabled=True)
 
-                for i in range(last_page - (3 + (adjacents * 2)), last_page + 1):
+                for i in range(last_page - (3 + (adj * 2)), last_page + 1):
                     pagination += emit(i, i == page)
 
         # Append the Next button
