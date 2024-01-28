@@ -8,8 +8,10 @@ from utils.bootstrap_options import BOOTSTRAP_OPTIONS
 
 from .data.products import Product, COLS, make_products
 
-# https://github.com/wenzhixin/bootstrap-table-examples
-# https://examples.bootstrap-table.com/template.html?v=869&url=extensions/addrbar-page.html
+# reactPy clone of the following bootstrap table example, see:
+#
+#   https://github.com/wenzhixin/bootstrap-table-examples
+#   https://examples.bootstrap-table.com/template.html?v=869&url=extensions/addrbar-page.html
 
 
 @component
@@ -108,7 +110,6 @@ def Loading():
         )
     )
 
-
 @component
 def THead(table: Table):
 
@@ -144,30 +145,18 @@ def TBody(table: List[Product]):
         For(TRow, iterator=enumerate(table))
     )
 
-
 @component
-def XXTable(*children):
-    return html.table({'id': 'table', 'data-addrbar': 'true', 'data-pagination': 'true', 'data-search': 'true', 'data-show-search-clear-button': 'true', 'data-url': 'https://examples.wenzhixin.net.cn/examples/bootstrap_table/data', 'data-side-pagination': 'server', 'class_name': 'table table-bordered table-hover'},
-    *children
-    )
-
-
-@component
-def TableExample(table: Table):
-    return XXTable(
-        THead(table),
-        TBody(table.paginator.rows)
-    )
-
-@component
-def TableContainer(table: Table):
+def ProductsTable(table: Table):
     return html.div({'class_name': 'fixed-table-container', 'style': 'padding-bottom: 0px;'},
         html.div({'class_name': 'fixed-table-header', 'style': 'display: none;'},
             html.table()
         ),
         html.div({'class_name': 'fixed-table-body'},
             Loading(),
-            table
+            html.table({'id': 'table', 'data-addrbar': 'true', 'data-pagination': 'true', 'data-search': 'true', 'data-show-search-clear-button': 'true', 'data-url': 'https://examples.wenzhixin.net.cn/examples/bootstrap_table/data', 'data-side-pagination': 'server', 'class_name': 'table table-bordered table-hover'},
+                THead(table),
+                TBody(table.paginator.rows)
+            )
         ),
         html.div({'class_name': 'fixed-table-footer'})
     )
@@ -193,15 +182,12 @@ def AppMain():
 
     # Define the table UI
 
-
     return html.div(
         Header(),
         html.div({'id': 'example'},
             html.div({'class_name': 'bootstrap-table bootstrap5'},
                 Toolbar(),
-                TableContainer(
-                    TableExample(table)
-                ),
+                ProductsTable(table),
                 TablePaginator(table.paginator),
             ),
             html.div({'class_name': 'clearfix'})
