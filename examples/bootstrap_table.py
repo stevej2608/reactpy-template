@@ -7,6 +7,7 @@ from components.ellipses_paginator import EllipsesPaginator
 from utils.fast_server import run
 from utils.reactpy_helpers import For
 from utils.bootstrap_options import BOOTSTRAP_OPTIONS
+from utils.component_class import class_component
 
 from .data.products import Product, COLS, make_products
 
@@ -35,7 +36,8 @@ def Header():
     )
 
 
-class CustomPaginator(EllipsesPaginator):
+@class_component
+class CustomPaginatorUI(EllipsesPaginator):
 
     PREVIOUS = '<'
     NEXT = '>'
@@ -61,6 +63,12 @@ class CustomPaginator(EllipsesPaginator):
 
         return html.li({'class_name': cls},
                 html.a({'class_name': 'page-link', 'onclick': on_click, 'aria-label': f'to page {page}'}, page)
+        )
+
+
+    def render(self):
+        return html.ul({'class_name': 'pagination'},
+            *self.select()
         )
 
 
@@ -94,12 +102,6 @@ def TablePaginator(paginator: Paginator):
             )
         )
 
-    @component
-    def PaginatorBar():
-        paginator_ui = CustomPaginator(paginator, adjacents=1)
-        return html.ul({'class_name': 'pagination'},
-            *paginator_ui.select()
-        )
 
     start = paginator.page_index * paginator.page_size + 1
     end = start + paginator.page_size - 1
@@ -113,7 +115,7 @@ def TablePaginator(paginator: Paginator):
             )
         ),
         html.div({'class_name': 'float-right pagination'},
-            PaginatorBar()
+            CustomPaginatorUI(paginator, adjacents=1)
         )
     )
 

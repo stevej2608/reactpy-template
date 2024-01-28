@@ -1,8 +1,10 @@
 from typing import List
 from reactpy import html
-from reactpy_table import Paginator
 
-class EllipsesPaginator:
+from reactpy_table import Paginator
+from utils.component_class import ComponentClass
+
+class EllipsesPaginator(ComponentClass):
     """Ellipses pagination component
 
     Args:
@@ -34,12 +36,13 @@ class EllipsesPaginator:
     NEXT = 'Next'
 
     def __init__(self, paginator:Paginator, adjacents=2):
+        super().__init__()
         self.adjacents = adjacents
         self.paginator = paginator
 
 
     def emit(self, page: str, active=False, disabled=False) -> html.li:
-        """Return the html.Li markup for given page
+        """Return the markup for given page number
 
         Args:
             page (str): The page number | Prev | Next | ellipses
