@@ -1,6 +1,8 @@
 from typing import List
-from reactpy import component, html, use_memo
+from reactpy import component, html, use_memo, event
 from reactpy_table import use_reactpy_table, Column, Table, Options, Paginator, SimplePaginator, SimpleColumnSort, SimpleTableSearch
+
+from components.paginator import EllipsesPaginator
 
 from utils.fast_server import run
 from utils.reactpy_helpers import For
@@ -10,6 +12,7 @@ from .data.products import Product, COLS, make_products
 
 # reactPy clone of the following bootstrap table example, see:
 #
+#   https://github.com/wenzhixin/bootstrap-table
 #   https://github.com/wenzhixin/bootstrap-table-examples
 #   https://examples.bootstrap-table.com/template.html?v=869&url=extensions/addrbar-page.html
 
@@ -31,57 +34,66 @@ def Header():
         # )
     )
 
+
+class CustomPaginator(EllipsesPaginator):
+
+    @component
+    def emit(self, page: str, active=False, disabled=False) -> html.li:
+        return html.li({'class_name': 'page-item'},
+                html.a({'class_name': 'page-link', 'aria-label': f'to page {page}'}, page)
+        )
+
+
 @component
 def TablePaginator(paginator: Paginator):
+
+    @component
+    def PageSizeSelect(sizes:List[int]):
+
+        @component
+        def PageOption(size:int):
+
+            @event
+            def on_change(event):
+                paginator.set_page_size(size)
+
+            if size == paginator.page_size:
+                cls = 'dropdown-item active'
+            else:
+                cls ='dropdown-item'
+
+            return html.a({'class_name': cls, 'href': '#', 'onclick': on_change}, size)
+
+        return html.div({'class_name': 'btn-group dropdown dropup'},
+            html.button({'class_name': 'btn btn-secondary dropdown-toggle', 'type': 'button', 'data-bs-toggle': 'dropdown'},
+                html.span({'class_name': 'page-size'}, paginator.page_size),
+                html.span({'class_name': 'caret'})
+            ),
+            html.div({'class_name': 'dropdown-menu'},
+                For(PageOption, sizes)
+            )
+        )
+    
+    @component
+    def PaginatorBar():
+        paginator_ui = CustomPaginator(paginator)
+        return html.ul({'class_name': 'pagination'},
+            *paginator_ui.select(adjacents=2)
+        )
+
+    start = paginator.page_index * paginator.page_size + 1
+    end = start + paginator.page_size - 1
+
     return html.div({'class_name': 'fixed-table-pagination', 'style': ''},
         html.div({'class_name': 'float-left pagination-detail'},
-            html.span({'class_name': 'pagination-info'}, "Showing 31 to 40 of 800 rows"),
+            html.span({'class_name': 'pagination-info'}, f"Showing {start} to {end} of {paginator.row_count}"),
             html.div({'class_name': 'page-list'},
-                html.div({'class_name': 'btn-group dropdown dropup'},
-                    html.button({'class_name': 'btn btn-secondary dropdown-toggle', 'type': 'button', 'data-bs-toggle': 'dropdown'},
-                        html.span({'class_name': 'page-size'}, "10"),
-                        html.span({'class_name': 'caret'})
-                    ),
-                    html.div({'class_name': 'dropdown-menu'},
-                        html.a({'class_name': 'dropdown-item active', 'href': '#'}, "10"),
-                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "25"),
-                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "50"),
-                        html.a({'class_name': 'dropdown-item', 'href': '#'}, "100")
-                    )
-                ),
+                PageSizeSelect([10, 25, 50, 100]),
                 " rows per page"
             )
         ),
         html.div({'class_name': 'float-right pagination'},
-            html.ul({'class_name': 'pagination'},
-                html.li({'class_name': 'page-item page-pre'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'previous page'}, "‹")
-                ),
-                html.li({'class_name': 'page-item'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 1'}, "1")
-                ),
-                html.li({'class_name': 'page-item'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 2'}, "2")
-                ),
-                html.li({'class_name': 'page-item'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 3'}, "3")
-                ),
-                html.li({'class_name': 'page-item active'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 4'}, "4")
-                ),
-                html.li({'class_name': 'page-item'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 5'}, "5")
-                ),
-                html.li({'class_name': 'page-item page-last-separator disabled'},
-                    html.a({'class_name': 'page-link', 'aria-label': ''}, "...")
-                ),
-                html.li({'class_name': 'page-item'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'to page 80'}, "80")
-                ),
-                html.li({'class_name': 'page-item page-next'},
-                    html.a({'class_name': 'page-link', 'aria-label': 'next page'}, "›")
-                )
-            )
+            PaginatorBar()
         )
     )
 
@@ -183,7 +195,7 @@ def AppMain():
     # Define the table UI
 
     return html.div(
-        Header(),
+        # Header(),
         html.div({'id': 'example'},
             html.div({'class_name': 'bootstrap-table bootstrap5'},
                 Toolbar(),

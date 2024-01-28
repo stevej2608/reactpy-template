@@ -965,19 +965,16 @@ name = "reactpy-table"
 version = "0.0.2"
 description = "Headless UI for building powerful tables"
 optional = false
-python-versions = ">=3.11,<4.0"
-files = [
-    {file = "reactpy_table-0.0.2-py3-none-any.whl", hash = "sha256:c7a5a8a9f409199980ece616d593432735293761aa46ca2de8b156b774c3e9c5"},
-    {file = "reactpy_table-0.0.2.tar.gz", hash = "sha256:d9dbe9b8909f10ea129251d09046c7c8e65633efcb26d5efdae2d4aef7199323"},
-]
+python-versions = "^3.11"
+files = []
+develop = true
 
 [package.dependencies]
-reactpy = ">=1.0.2,<2.0.0"
+reactpy = "^1.0.2"
 
 [package.source]
-type = "legacy"
-url = "http://debian-server:6543/simple"
-reference = "pypicloud"
+type = "directory"
+url = "../reactpy-table"
 
 [[package]]
 name = "requests"
@@ -1433,4 +1430,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "66c8587d667ef0b2e212257d9a2d902c3edd893f5b8e87ae1d213468e04f13ab"
+content-hash = "faace5f6838aab417922e82869111171f5d2f090019e26ac6f53badccef815f0"
