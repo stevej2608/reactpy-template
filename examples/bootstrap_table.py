@@ -37,10 +37,30 @@ def Header():
 
 class CustomPaginator(EllipsesPaginator):
 
+    PREVIOUS = '<'
+    NEXT = '>'
+
     @component
     def emit(self, page: str, active=False, disabled=False) -> html.li:
-        return html.li({'class_name': 'page-item'},
-                html.a({'class_name': 'page-link', 'aria-label': f'to page {page}'}, page)
+
+        @event
+        def on_click(event):
+            if page == self.PREVIOUS:
+                self.paginator.previous_page()
+            elif page == self.NEXT:
+                self.paginator. next_page()
+            else:
+                try:
+                    self.paginator.set_page_index(page - 1)
+                except Exception:
+                    ...
+
+        cls = 'item'
+        if active:
+            cls += ' active'
+
+        return html.li({'class_name': cls},
+                html.a({'class_name': 'page-link', 'onclick': on_click, 'aria-label': f'to page {page}'}, page)
         )
 
 
@@ -78,7 +98,7 @@ def TablePaginator(paginator: Paginator):
     def PaginatorBar():
         paginator_ui = CustomPaginator(paginator)
         return html.ul({'class_name': 'pagination'},
-            *paginator_ui.select(adjacents=2)
+            *paginator_ui.select(adjacents=1)
         )
 
     start = paginator.page_index * paginator.page_size + 1

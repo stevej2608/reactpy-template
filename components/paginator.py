@@ -33,8 +33,8 @@ class EllipsesPaginator:
     PREVIOUS = 'Previous'
     NEXT = 'Next'
 
-    def __init__(self, state:Paginator):
-        self.state = state
+    def __init__(self, paginator:Paginator):
+        self.paginator = paginator
 
 
     def emit(self, page: str, active=False, disabled=False) -> html.li:
@@ -50,7 +50,7 @@ class EllipsesPaginator:
         """
 
         if disabled:
-            cls = 'page-item dissabled'
+            cls = 'page-item disabled'
         if active:
             cls = 'page-item active'
 
@@ -69,16 +69,19 @@ class EllipsesPaginator:
             List[html.Li]: Pagination child elements
         """
 
-        page = self.state.page_index
-        pagination = []
-        last_page = self.state.page_count
+        # Page range here [1..n]
 
-        def emit(page, active=False, disabled=False):
-            element = self.emit(page, active, disabled)
+        page = self.paginator.page_index + 1
+        pagination = []
+        last_page = self.paginator.page_count
+
+        def emit(pge, disabled=False):
+            active = pge == page
+            element = self.emit(pge, active, disabled)
             return [element]
 
-        first_pages = emit(1) + emit(2)
-        last_pages = emit(last_page - 1) + emit(last_page)
+        first_pages = emit(1)
+        last_pages = emit(last_page)
 
         # Previous button
 
@@ -131,7 +134,7 @@ class EllipsesPaginator:
 
         # Append the Next button
 
-        pagination += emit(self.NEXT, disabled=(page == last_page))
+        pagination += emit(self.NEXT, disabled = page == last_page)
 
         if last_page <= 1 :
             pagination = []
