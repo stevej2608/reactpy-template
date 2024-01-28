@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from reactpy import component, html, use_memo, event
 from reactpy_table import use_reactpy_table, Column, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
 
@@ -43,32 +43,30 @@ class CustomPaginatorUI(EllipsesPaginator):
     NEXT = '>'
 
     @component
-    def emit(self, page: str, active=False, disabled=False) -> html.li:
+    def list_element(self, element: Union[str, int], active=False, disabled=False) -> html.li:
 
         @event
         def on_click(event):
-            if page == self.PREVIOUS:
-                self.paginator.previous_page()
-            elif page == self.NEXT:
-                self.paginator. next_page()
+            if isinstance(element, int):
+                self.paginator.set_page_index(element - 1)
             else:
-                try:
-                    self.paginator.set_page_index(page - 1)
-                except Exception:
-                    pass # Ignore click on ellipses
+                if element == self.PREVIOUS:
+                    self.paginator.previous_page()
+                elif element == self.NEXT:
+                    self.paginator. next_page()
 
         cls = 'item'
         if active:
             cls += ' active'
 
         return html.li({'class_name': cls},
-                html.a({'class_name': 'page-link', 'onclick': on_click, 'aria-label': f'to page {page}'}, page)
+                html.a({'class_name': 'page-link', 'onclick': on_click, 'aria-label': f'to page {element}'}, element)
         )
 
 
     def render(self):
         return html.ul({'class_name': 'pagination'},
-            *self.select()
+            *self.make_list()
         )
 
 

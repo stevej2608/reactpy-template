@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 from reactpy import html
 
 from reactpy_table import Paginator
@@ -8,32 +8,38 @@ class EllipsesPaginator(ComponentClass):
     """Ellipses pagination component
 
     Args:
-        page (int, optional): The initial active page. Defaults to 1.
-        adjacents (int, optional): How many adjacent pages should be shown on each side. Defaults to 2.
-        page_size (int, optional): How many items to show per page. Defaults to 5.
-        total_items (int): Total number of items to be grouped into pages
+        paginator (Paginator): The paginator logic
+        adjacents (int, optional): Number of elements ether side of active element. Defaults to 2.
 
     Example:
 
     ```
 
-            « previous [1] 2 3 4 5 6 7 ... 19 20 NEXT »
+            « PREVIOUS [1] 2 3 4 5 6 7 ... 19 20 NEXT »
             « PREVIOUS 1 [2] 3 4 5 6 7 ... 19 20 NEXT »
             « PREVIOUS 1 2 [3] 4 5 6 7 ... 19 20 NEXT »
             « PREVIOUS 1 2 3 [4] 5 6 7 ... 19 20 NEXT »
+
+            ...
+
             « PREVIOUS 1 2 ... 3 4 [5] 6 7 ... 19 20 NEXT »
 
-            « PREVIOUS 1 2 ... 13 14 [15] 16 17 ... 19 20 NEXT »
-            « PREVIOUS 1 2 ... 14 15 [16] 17 18 19 20 NEXT »
+            ...
 
+            « PREVIOUS 1 2 ... 13 14 [15] 16 17 ... 19 20 NEXT »
+
+            ...
+
+            « PREVIOUS 1 2 ... 14 15 16 17 [18] 19 20 NEXT »
             « PREVIOUS 1 2 ... 14 15 16 17 18 [19] 20 NEXT »
-            « PREVIOUS 1 2 ... 14 15 16 17 18 19 [20] next »
+            « PREVIOUS 1 2 ... 14 15 16 17 18 19 [20] NEXT »
 
     ```
     """
 
     PREVIOUS = 'Previous'
     NEXT = 'Next'
+    ELLIPSES = '...'
 
     def __init__(self, paginator:Paginator, adjacents=2):
         super().__init__()
@@ -41,16 +47,16 @@ class EllipsesPaginator(ComponentClass):
         self.paginator = paginator
 
 
-    def emit(self, page: str, active=False, disabled=False) -> html.li:
-        """Return the markup for given page number
+    def list_element(self, element: Union[str, int], active=False, disabled=False) -> html.li:
+        """Return the markup for given element number
 
         Args:
-            page (str): The page number | Prev | Next | ellipses
-            active (bool, optional): True if the page is the active page. Defaults to False.
-            disabled (bool, optional): True of the page is not clickable. Defaults to False.
+            element (str): The page number | Prev | Next | ellipses
+            active (bool, optional): True if the element is the active page. Defaults to False.
+            disabled (bool, optional): True of the element is not clickable. Defaults to False.
 
         Returns:
-            html.Li: _description_
+            html.Li: The list element markup to be rendered
         """
 
         if disabled:
@@ -58,12 +64,12 @@ class EllipsesPaginator(ComponentClass):
         if active:
             cls = 'page-item active'
 
-        element = html.li({'class_name': cls}, html.span({'class_name': 'page-link'}, page))
+        element = html.li({'class_name': cls}, html.span({'class_name': 'page-link'}, element))
 
         return element
 
 
-    def select(self) -> List[html.li]:
+    def make_list(self) -> List[html.li]:
         """Return pagination child UI elements for given active page
 
         Args:
@@ -80,17 +86,17 @@ class EllipsesPaginator(ComponentClass):
         last_page = self.paginator.page_count
         adj = self.adjacents
 
-        def emit(pge, disabled=False):
+        def list_element(pge, disabled=False):
             active = pge == page
-            element = self.emit(pge, active, disabled)
+            element = self.list_element(pge, active, disabled)
             return [element]
 
-        first_pages = emit(1)
-        last_pages = emit(last_page)
+        first_pages = list_element(1)
+        last_pages = list_element(last_page)
 
         # Previous button
 
-        pagination += emit(self.PREVIOUS, disabled = page == 1)
+        pagination += list_element(self.PREVIOUS, disabled = page == 1)
 
         # Determine pages & ellipses to include...
 
@@ -98,7 +104,7 @@ class EllipsesPaginator(ComponentClass):
 
         if last_page < 7 + (adj * 2):
             for i in range(1, last_page+1):
-                pagination += emit(i, i == page)
+                pagination += list_element(i, i == page)
         elif last_page > 5 + (adj * 2):
 
             # Test to see if we're close to beginning. If so only hide later pages
@@ -108,9 +114,9 @@ class EllipsesPaginator(ComponentClass):
                 # eg, PREVIOUS 1 [2] 3 4 5 6 7 ... 19 20 NEXT
 
                 for i in range(1, 5 + (adj * 2)):
-                    pagination += emit(i, i == page)
+                    pagination += list_element(i, i == page)
 
-                pagination += emit('...', disabled=True)
+                pagination += list_element(self.ELLIPSES, disabled=True)
                 pagination += last_pages
 
             elif page < last_page - (1 + adj * 2):
@@ -119,12 +125,12 @@ class EllipsesPaginator(ComponentClass):
                 # eg, PREVIOUS 1 2 ... 5 6 [7] 8 9 ... 19 20 NEXT
 
                 pagination += first_pages
-                pagination += emit('...', disabled=True)
+                pagination += list_element(self.ELLIPSES, disabled=True)
 
                 for i in range(page - adj, page + adj + 1):
-                    pagination += emit(i, i == page)
+                    pagination += list_element(i, i == page)
 
-                pagination += emit('...', disabled=True)
+                pagination += list_element(self.ELLIPSES, disabled=True)
                 pagination += last_pages
             else:
 
@@ -132,14 +138,14 @@ class EllipsesPaginator(ComponentClass):
                 # eg, PREVIOUS 1 2 ... 14 15 16 17 [18] 19 20 NEXT
 
                 pagination += first_pages
-                pagination += emit('...', disabled=True)
+                pagination += list_element(self.ELLIPSES, disabled=True)
 
                 for i in range(last_page - (3 + (adj * 2)), last_page + 1):
-                    pagination += emit(i, i == page)
+                    pagination += list_element(i, i == page)
 
-        # Append the Next button
+        # Append the next list element
 
-        pagination += emit(self.NEXT, disabled = page == last_page)
+        pagination += list_element(self.NEXT, disabled = page == last_page)
 
         if last_page <= 1 :
             pagination = []
