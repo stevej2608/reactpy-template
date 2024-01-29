@@ -59,14 +59,7 @@ class EllipsesPaginator(ComponentClass):
             html.Li: The list element markup to be rendered
         """
 
-        if disabled:
-            cls = 'page-item disabled'
-        if active:
-            cls = 'page-item active'
-
-        element = html.li({'class_name': cls}, html.span({'class_name': 'page-link'}, element))
-
-        return element
+        return html.li(element)
 
 
     def make_list(self) -> List[html.li]:
@@ -147,7 +140,7 @@ class EllipsesPaginator(ComponentClass):
 
         pagination += list_element(self.NEXT, disabled = page == last_page)
 
-        if last_page <= 1 :
-            pagination = []
+        # if last_page <= 1 :
+        #     pagination = []
 
         return pagination

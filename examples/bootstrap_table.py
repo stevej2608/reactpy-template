@@ -13,10 +13,9 @@ from .data.products import Product, COLS, make_products
 
 # ReactPy clone of the following bootstrap table example, see:
 #
+#   https://examples.bootstrap-table.com/template.html?v=869&url=extensions/addrbar-page.html
 #   https://github.com/wenzhixin/bootstrap-table
 #   https://github.com/wenzhixin/bootstrap-table-examples
-#   https://examples.bootstrap-table.com/template.html?v=869&url=extensions/addrbar-page.html
-
 
 @component
 def Header():
