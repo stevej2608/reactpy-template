@@ -637,9 +637,10 @@ redefining-builtins-modules=six.moves,past.builtins,future.builtins,builtins,io
 
 [MASTER]
 disable=
-    C0114, # missing-module-docstring
-    C0116, # missing-function-docstring
-    C0115, # missing class docstring
     C0103, # invalid-name
-    W0718, # broad-exception-caught
+    C0114, # missing-module-docstring
+    C0115, # missing class docstring
+    C0116, # missing-function-docstring
+    E1131, # unsupported-binary-operation
     W0621, # redefined-outer-name
+    W0718, # broad-exception-caught

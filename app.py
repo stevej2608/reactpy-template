@@ -1,6 +1,6 @@
 from reactpy import component, html
 from reactpy_router import route, simple
-from utils.options import BOOTSTRAP_OPTIONS, Options
+from utils.server_options import BOOTSTRAP_OPTIONS, ServerOptions
 from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
@@ -85,7 +85,7 @@ if __name__ == "__main__":
         'charset': 'utf-8'
     })
 
-    opt = Options(
+    opt = ServerOptions(
         head = [
             PLOTLY_JS,
             'assets/multipage.css'

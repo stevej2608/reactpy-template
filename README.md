@@ -1,10 +1,11 @@
 # reactpy-template
 
-A basic FastAPi server based template for reactpy,.
+Template for reactpy multi-page projects.
 
-* Page based layout
-* Custom router
-* Example of 404 page
+* FastAPi server based
+* Page container, custom router
+* Example of 404 page, global_warming_page, home_page, page_404, ticker_page.
+
 
 ## Pagination
 

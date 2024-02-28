@@ -3,9 +3,8 @@ import sys
 import pandas as pd
 import colorlover as cl
 from reactpy import html, component, event, use_state, utils
-from reactpy_select import Select, ActionMeta
+from reactpy_select import Select, ActionMeta, Options
 
-from utils.options import Options
 from dash import dcc
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App

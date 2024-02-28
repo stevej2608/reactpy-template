@@ -1,12 +1,12 @@
 from typing import List
 from reactpy import component, html
+from reactpy.core.types import VdomChildren, VdomDict
 from reactpy_router import link
-from reactpy.core.types import VdomDict
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
 
 @component
-def DropdownItem(*children, href='#'):
+def DropdownItem(*children: VdomChildren, href:str='#'):
     return html.li(
         html.a({'class_name': 'dropdown-item', 'href': href}, *children)
     )
@@ -17,7 +17,7 @@ def DropDownDivider():
 
 
 @component
-def Navbar(*children):
+def Navbar(*children: VdomChildren):
     return html.nav({'class_name': 'navbar navbar-expand-lg bg-body-tertiary'},
         html.div({'class_name': 'container-fluid'},
         *children
@@ -26,7 +26,7 @@ def Navbar(*children):
 
 
 @component
-def Brand(*children, href='#'):
+def Brand(*children: VdomChildren, href:str='#'):
     return html.a({'class_name': 'navbar-brand', 'href': href}, *children)
 
 
@@ -46,17 +46,17 @@ def Toggle():
 
 
 @component
-def Collapse(*children):
+def Collapse(*children: VdomChildren):
     return html.div({'class_name': 'collapse navbar-collapse', 'id': 'navbarSupportedContent'}, *children)
 
 
 @component
-def Nav(*children):
+def Nav(*children: VdomChildren):
     return html.ul({'class_name': 'navbar-nav me-auto mb-2 mb-lg-0'}, *children)
 
 
 @component
-def NavLink(*children, href='#', disabled=False):
+def NavLink(*children: VdomChildren, href:str='#', disabled:bool=False):
     state = 'disabled' if disabled else 'active'
     return html.li({'class_name': 'nav-item'},
         link(*children,
@@ -66,7 +66,7 @@ def NavLink(*children, href='#', disabled=False):
         )
 
 @component
-def XNavLink(*children, href='#', disabled=False):
+def XNavLink(*children: VdomChildren, href:str='#', disabled:bool=False):
     state = 'disabled' if disabled else 'active'
     return html.li({'class_name': 'nav-item'},
         html.a({'class_name': f'nav-link {state}', 'aria-current': 'page', 'href': href},
@@ -75,7 +75,7 @@ def XNavLink(*children, href='#', disabled=False):
         )
 
 @component
-def NavDropdown(*children, title="Undefined"):
+def NavDropdown(*children: VdomChildren, title: str="Undefined"):
     return html.li({'class_name': 'nav-item dropdown'},
         html.a({
             'class_name': 'nav-link dropdown-toggle',

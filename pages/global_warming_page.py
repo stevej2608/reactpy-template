@@ -1,3 +1,4 @@
+from typing import Any
 import pandas as pd
 from reactpy import html, component
 from reactpy_router import link
@@ -17,7 +18,7 @@ of Climate at a Glance (GCAG). Two datasets are provided:
 
 """
 
-data = pd.read_csv("pages/data/global-warming.csv")
+data = pd.read_csv("pages/data/global-warming.csv") # type: ignore
 
 @component
 def Layout():

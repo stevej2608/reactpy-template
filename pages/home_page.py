@@ -14,14 +14,14 @@ The framework, component suite and demo are 100% Python
 """
 
 @component
-def jumbotron_header(title, text):
+def jumbotron_header(title:str, text:str):
     return html.header({'class_name': 'jumbotron my-4'},
         html.h1({'class_name': 'display-4 text-center'}, title),
         html.p(text),
     )
 
 @component
-def card(title, text):
+def card(title:str, text:str):
     return html.div({'class_name': 'col-lg-3 col-md-6 mb-4'},
         html.div({'class_name': 'card h-100'},
             html.img({'alt': ''}),
