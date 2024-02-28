@@ -1,6 +1,6 @@
-from typing import List, Union
+from typing import List, Union, cast
 from reactpy import component, html, use_memo, event
-from reactpy_table import use_reactpy_table, Column, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
+from reactpy_table import use_reactpy_table, Column, ColumnSort, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
 
 from components.ellipses_paginator import EllipsesPaginator
 
@@ -148,8 +148,13 @@ def Toolbar(search):
     )
 
 @component
-def Loading():
-    return html.div({'class_name': 'fixed-table-loading table table-bordered table-hover', 'style': 'top: 59.4px;'},
+def Loading(show_loading:bool):
+
+    cls = 'fixed-table-loading table table-bordered table-hover'
+    if show_loading:
+        cls += ' open'
+
+    return html.div({'class_name': 'fixed-table-loading table table-bordered table-hover open', 'style': 'top: 59.4px;'},
         html.span({'class_name': 'loading-wrap'},
             html.span({'class_name': 'loading-text', 'style': 'font-size: 32px;'}, "Loading, please wait"),
             html.span({'class_name': 'animation-wrap'},
@@ -163,8 +168,17 @@ def THead(table: Table):
 
     @component
     def ColHeader(col: Column):
+
+        sort = cast(ColumnSort, table.sort)
+
+        @event
+        def on_click(event):
+            sort.toggle_sort(col)
+
+
+
         return html.th({'data-field': col.label.lower()},
-            html.div({'class_name': 'th-inner sortable both'}, col.label),
+            html.div({'class_name': 'th-inner sortable both', 'onclick': on_click}, col.label),
             html.div({'class_name': 'fht-cell'})
         )
 
@@ -200,7 +214,7 @@ def ProductsTable(table: Table):
             html.table()
         ),
         html.div({'class_name': 'fixed-table-body'},
-            Loading(),
+            Loading(show_loading=False),
             html.table({'id': 'table', 'data-addrbar': 'true', 'data-pagination': 'true', 'data-search': 'true', 'data-show-search-clear-button': 'true', 'data-url': 'https://examples.wenzhixin.net.cn/examples/bootstrap_table/data', 'data-side-pagination': 'server', 'class_name': 'table table-bordered table-hover'},
                 THead(table),
                 TBody(table.paginator.rows)

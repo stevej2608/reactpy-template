@@ -5,7 +5,7 @@ from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
 
-from pages import TICKER_SLUG, SOLAR_SLUG, GLOBAL_WARMING_SLUG
+from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG
 from pages import HomePage,  Page1, Page2, TickerPage, PageNotFound, WarmingPage
 
 NAV_BAR_ITEMS = {
