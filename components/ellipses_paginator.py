@@ -51,7 +51,7 @@ class EllipsesPaginator(ComponentClass):
 
 
 
-    def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False) -> VdomDict:
+    def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False):
         """Return the markup for given element number
 
         Args:

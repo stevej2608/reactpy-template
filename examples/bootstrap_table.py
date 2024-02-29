@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Union
 
-from reactpy import component, event, html, use_memo
+from reactpy import component, event, html, use_memo, use_state
 from reactpy.core.types import VdomDict
 from reactpy_table import ColumnDef, IPaginator, ITableSearch, Options, Table, use_reactpy_table
 
@@ -44,8 +44,7 @@ class CustomPaginatorUI(EllipsesPaginator):
     PREVIOUS = "<"
     NEXT = ">"
 
-
-    def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False) -> VdomDict:
+    def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False):
 
         @event
         def on_click(event: Dict[str, Any]):
@@ -57,15 +56,17 @@ class CustomPaginatorUI(EllipsesPaginator):
                 elif element == self.NEXT:
                     self.paginator.next_page()
 
-        cls = "item"
+        cls = "page-item"
         if active:
             cls += " active"
 
         return html.li(
             {"class_name": cls},
-            html.a({"class_name": "page-link", "onclick": on_click, "aria-label": f"to page {element}"}, str(element))
+            html.a(
+                {"class_name": "page-link", "onclick": on_click, "href": "#", "aria-label": f"to page {element}"},
+                str(element),
+            ),
         )
-
 
     def render(self):
         return html.ul({"class_name": "pagination"}, *self.make_list())
@@ -73,12 +74,9 @@ class CustomPaginatorUI(EllipsesPaginator):
 
 @component
 def TablePaginator(paginator: IPaginator[Product]):
-
     @component
-    def PageSizeSelect(sizes: List[int]) -> VdomDict:
-
-
-        def PageOption(size: int) -> VdomDict:
+    def PageSizeSelect(sizes: List[int]):
+        def PageOption(size: int):
             @event
             def on_change(event: Dict[str, Any]):
                 paginator.set_page_size(size)
@@ -116,10 +114,19 @@ def TablePaginator(paginator: IPaginator[Product]):
 
 @component
 def Search(search: ITableSearch[Product]):
+
+    search_term, set_search_term = use_state('')
+
     @event
     def on_change(event: Dict[str, Any]):
         text = event["currentTarget"]["value"]
+        set_search_term(text)
         search.table_search(text)
+
+    @event
+    def on_clear(event: Dict[str, Any]):
+        set_search_term('')
+        search.table_search('')
 
     return html.div(
         {"class_name": "input-group"},
@@ -131,17 +138,24 @@ def Search(search: ITableSearch[Product]):
                 "onchange": on_change,
                 "placeholder": "Search",
                 "autocomplete": "off",
+                "value": search_term
             }
         ),
         html.button(
-            {"class_name": "btn btn-secondary", "type": "button", "name": "clearSearch", "title": "Clear Search"},
+            {
+                "class_name": "btn btn-secondary",
+                "type": "button",
+                "name": "clearSearch",
+                "onclick": on_clear,
+                "title": "Clear Search",
+            },
             html.i({"class_name": "bi bi-trash"}),
         ),
     )
 
 
 @component
-def Toolbar(search: VdomDict) -> VdomDict:
+def Toolbar(search: VdomDict):
     return html.div(
         {"class_name": "fixed-table-toolbar"}, html.div({"class_name": "float-right search btn-group"}, search)
     )
@@ -164,8 +178,7 @@ def Loading(show_loading: bool):
 
 
 @component
-def THead(table: Table[Product]) -> VdomDict:
-
+def THead(table: Table[Product]):
     def ColHeader(col: ColumnDef):
         @event
         def on_click(event: Dict[str, Any]):
@@ -193,7 +206,7 @@ def TRow(index: int, row: Product):
 
 
 @component
-def TBody(table: List[Product]) -> VdomDict:
+def TBody(table: List[Product]):
     return html.tbody(For(TRow, iterator=enumerate(table)))
 
 
@@ -204,16 +217,16 @@ def ProductsTable(table: Table[Product]):
         html.div({"class_name": "fixed-table-header", "style": "display: none;"}, html.table()),
         html.div(
             {"class_name": "fixed-table-body"},
-            Loading(show_loading=False),
+            # Loading(show_loading=False),
             html.table(
                 {
-                    "id": "table",
-                    "data-addrbar": "true",
-                    "data-pagination": "true",
-                    "data-search": "true",
-                    "data-show-search-clear-button": "true",
-                    "data-url": "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
-                    "data-side-pagination": "server",
+                    # "id": "table",
+                    # "data-addrbar": "true",
+                    # "data-pagination": "true",
+                    # "data-search": "true",
+                    # "data-show-search-clear-button": "true",
+                    # "data-url": "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
+                    # "data-side-pagination": "server",
                     "class_name": "table table-bordered table-hover",
                 },
                 THead(table),
