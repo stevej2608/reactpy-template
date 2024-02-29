@@ -1,113 +1,111 @@
-from typing import List, Any, Dict, Callable
-from reactpy import component, html, use_state, use_memo, event
-from reactpy.core.types import VdomDict, VdomChildren
-from reactpy_table import use_reactpy_table, ColumnDef, Table, ITableSearch, Columns, Options, IPaginator
+from typing import Any, Callable, Dict, List
+
+from reactpy import component, event, html, use_memo, use_state
+from reactpy.core.types import VdomChildren, VdomDict
+from reactpy_table import ColumnDef, Columns, IPaginator, ITableSearch, Options, Table, use_reactpy_table
 
 from utils.logger import log, logging
 from utils.pico_run import pico_run
 from utils.reactpy_helpers import For
 
-from .data.products import Product, COLS, make_products
+from .data.products import COLS, Product, make_products
 
 # https://codesandbox.io/p/devbox/tanstack-table-example-expanding-jr4nn3?embed=1
 # https://medium.com/@jordammendes/build-powerfull-tables-in-reactjs-with-tanstack-9d57a3a63e35
 # https://tanstack.com/table/v8/docs/examples/react/expanding
 
+
 @component
 def TablePaginator(paginator: IPaginator[Product]):
-
     @component
-    def Button(text:str, action:Callable[..., None], disabled:bool=False):
-
+    def Button(text: str, action: Callable[..., None], disabled: bool = False):
         @event
         def onclick(event: Dict[str, Any]):
             action()
 
-        return html.button({'onclick': onclick, 'disabled': disabled}, text)
+        return html.button({"onclick": onclick, "disabled": disabled}, text)
 
     @component
-    def PageSizeSelect(sizes:List[int]) -> VdomDict:
-
+    def PageSizeSelect(sizes: List[int]) -> VdomDict:
         @event
         def on_change(event: Dict[str, Any]):
-            page_size = int(event['currentTarget']['value'])
+            page_size = int(event["currentTarget"]["value"])
             paginator.set_page_size(page_size)
 
-        def PageOption(size:int):
-            return html.option({'value': size}, f"Show {size}")
+        def PageOption(size: int):
+            return html.option({"value": size}, f"Show {size}")
 
-        return html.select({'value': sizes[0], "on_change": on_change}, For(PageOption, sizes))
-
+        return html.select({"value": sizes[0], "on_change": on_change}, For(PageOption, sizes))
 
     @component
     def PageInput():
-
         count_value, set_count = use_state(0)
 
         @event(prevent_default=True)
         def on_change(event: Dict[str, Any]):
-
             try:
-                new_value = int(event['currentTarget']['value'])
+                new_value = int(event["currentTarget"]["value"])
                 new_value = max(new_value, 1)
                 new_value = min(new_value, paginator.page_count)
             except Exception:
                 new_value = 1
 
-            log.info('new_value = %d', new_value)
+            log.info("new_value = %d", new_value)
 
             if paginator.page_index != new_value - 1:
                 paginator.set_page_index(new_value - 1)
             else:
                 set_count(count_value + 1)
 
-        log.info('render new_value = %d', paginator.page_index + 1)
+        log.info("render new_value = %d", paginator.page_index + 1)
 
         return html._(
             Text("Go to page:"),
-            html.input({'type': 'number', 'value': paginator.page_index + 1, "on_change": on_change}),
+            html.input({"type": "number", "value": paginator.page_index + 1, "on_change": on_change}),
         )
 
     no_previous = not paginator.can_get_previous_page()
     no_next = not paginator.can_get_next_page()
 
-    return html.div({'class_name': 'grid', 'style': {'align-items': 'center','grid-template-columns': '2.5fr 1.5fr 1.5fr 2.5fr 4fr 1.2fr 2fr 3fr'}},
-        Button("<<", paginator.first_page, disabled = no_previous),
-        Button("<", paginator.previous_page, disabled = no_previous),
-        Button(">", paginator.next_page, disabled = no_next),
-        Button(">>", paginator.last_page, disabled = no_next),
-        Text("Page",html.strong(f" {paginator.page_index + 1} of {paginator.page_count}")),
+    return html.div(
+        {
+            "class_name": "grid",
+            "style": {"align-items": "center", "grid-template-columns": "2.5fr 1.5fr 1.5fr 2.5fr 4fr 1.2fr 2fr 3fr"},
+        },
+        Button("<<", paginator.first_page, disabled=no_previous),
+        Button("<", paginator.previous_page, disabled=no_previous),
+        Button(">", paginator.next_page, disabled=no_next),
+        Button(">>", paginator.last_page, disabled=no_next),
+        Text("Page", html.strong(f" {paginator.page_index + 1} of {paginator.page_count}")),
         PageInput(),
-        PageSizeSelect([10, 20, 30, 40, 50])
+        PageSizeSelect([10, 20, 30, 40, 50]),
     )
 
 
 @component
 def Text(*children: VdomChildren):
-    """Add the pico button margin to make the 
+    """Add the pico button margin to make the
     given text line up with the button text."""
 
-    return html.span({'style': 'margin-bottom: var(--spacing);'}, *children)
+    return html.span({"style": "margin-bottom: var(--spacing);"}, *children)
 
 
 @component
 def Search(search: ITableSearch[Product]) -> VdomDict:
-
     @event
     def on_change(event: Dict[str, Any]):
-        text = event['currentTarget']['value']
+        text = event["currentTarget"]["value"]
         search.table_search(text)
 
-    return html.input({'type': 'search', 'placeholder': 'Search', 'aria-label': 'Search', 'onchange': on_change})
+    return html.input({"type": "search", "placeholder": "Search", "aria-label": "Search", "onchange": on_change})
+
 
 @component
 def THead(table: Table[Product]) -> VdomDict:
-
     def text_with_arrow(col: ColumnDef):
-
         @event
         def on_click(event: Dict[str, Any]):
-            log.info('onclick col=%s', col)
+            log.info("onclick col=%s", col)
             table.sort.toggle_sort(col)
 
         # https://symbl.cc/en/collections/arrow-symbols/
@@ -115,23 +113,19 @@ def THead(table: Table[Product]) -> VdomDict:
         up = table.sort.is_sort_reverse(col)
 
         text = col.label + (" 🠕" if up else " 🠗")
-        return html.th({'onclick': on_click}, text)
+        return html.th({"onclick": on_click}, text)
 
-    return html.thead(
-        For(text_with_arrow, iterator=table.data.cols)
-    )
+    return html.thead(For(text_with_arrow, iterator=table.data.cols))
 
 
 @component
 def TColgroup(col_widths: List[int]):
     """Return a html.colgroup with the given widths"""
-    return  html.colgroup(
-        [html.col({'style': {'width':f"{width}px"}}) for width in col_widths]
-    )
+    return html.colgroup([html.col({"style": {"width": f"{width}px"}}) for width in col_widths])
 
 
 def TRow(index: int, row: Product):
-    return  html.tr(
+    return html.tr(
         html.td(str(row.index)),
         html.td(row.name),
         html.td(row.description),
@@ -142,41 +136,39 @@ def TRow(index: int, row: Product):
 
 
 def TBody(table: List[Product]):
-    return  html.tbody(
-        For(TRow, iterator=enumerate(table))
-    )
+    return html.tbody(For(TRow, iterator=enumerate(table)))
 
 
 @component
 def TFoot(columns: Columns):
-    return html.tfoot(
-        For(html.td, [col.label for col in columns])
-    )
+    return html.tfoot(For(html.td, [col.label for col in columns]))
 
 
 @component
 def AppMain():
-
     table_data = use_memo(lambda: make_products(10000))
 
-    table = use_reactpy_table(Options(
-        rows=table_data,
-        cols = COLS,
-    ))
-
+    table = use_reactpy_table(
+        Options(
+            rows=table_data,
+            cols=COLS,
+        )
+    )
 
     return html.div(
         html.br(),
-        html.h2('ReactPy Table Example'),
+        html.h2("ReactPy Table Example"),
         Search(table.search),
-        html.table({"role": "grid"},
+        html.table(
+            {"role": "grid"},
             TColgroup([80, 150, 100, 100, 100, 100]),
             THead(table),
             TBody(table.paginator.rows),
             TFoot(table.data.cols),
         ),
-        TablePaginator(table.paginator)
+        TablePaginator(table.paginator),
     )
+
 
 # python -m examples.table_example
 
