@@ -8,13 +8,4 @@ from .ticker_page import Layout as TickerPage
 from .global_warming_page import Layout as WarmingPage
 from .page_404 import Layout as PageNotFound
 
-BUTTONS_PAGE_SLUG = '/buttons'
-SOLAR_SLUG = '/solar'
-GLOBAL_WARMING_SLUG = '/global-warming'
-TICKER_SLUG = '/tickers'
-USER_SLUG='/user'
-LIFE_EXPECTANCY_SLUG='/life'
-TABLE_EXAMPLE_SLUG = '/table'
-TERMS_AND_CONDITIONS_SLUG='/terms'
-TRANSACTIONS_SLUG = "/pages/transactions"
-
+from .slugs import TICKER_SLUG, GLOBAL_WARMING_SLUG

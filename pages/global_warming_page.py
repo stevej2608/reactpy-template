@@ -1,11 +1,10 @@
-from typing import Any
 import pandas as pd
 from reactpy import html, component
 from reactpy_router import link
 from components.markdown import Markdown
 from dash import dcc
 
-from pages import SOLAR_SLUG
+from .slugs import SOLAR_SLUG
 
 global_md = """\
 ### Global Warming

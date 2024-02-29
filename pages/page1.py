@@ -2,7 +2,7 @@ from reactpy import html, component
 
 
 @component
-def big_center(text, id=None):
+def big_center(text:str):
     attr = {'class_name': 'display-3 text-center'}
     return html.h2(attr, text)
 

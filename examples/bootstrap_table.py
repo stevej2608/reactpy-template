@@ -1,10 +1,8 @@
-from typing import Any, Dict, List, Union, overload
+from typing import Any, Dict, List, Union
 
 from reactpy import component, event, html, use_memo
-from reactpy.core.component import Component
-
-from reactpy_table import ColumnDef, IPaginator, ITableSearch, Options, Table, use_reactpy_table
 from reactpy.core.types import VdomDict
+from reactpy_table import ColumnDef, IPaginator, ITableSearch, Options, Table, use_reactpy_table
 
 from components.ellipses_paginator import EllipsesPaginator
 from utils.component_class import class_component
@@ -46,8 +44,9 @@ class CustomPaginatorUI(EllipsesPaginator):
     PREVIOUS = "<"
     NEXT = ">"
 
-    @component
+
     def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False) -> VdomDict:
+
         @event
         def on_click(event: Dict[str, Any]):
             if isinstance(element, int):
@@ -74,10 +73,12 @@ class CustomPaginatorUI(EllipsesPaginator):
 
 @component
 def TablePaginator(paginator: IPaginator[Product]):
+
     @component
-    def PageSizeSelect(sizes: List[int]):
-        @component
-        def PageOption(size: int):
+    def PageSizeSelect(sizes: List[int]) -> VdomDict:
+
+
+        def PageOption(size: int) -> VdomDict:
             @event
             def on_change(event: Dict[str, Any]):
                 paginator.set_page_size(size)
@@ -87,13 +88,13 @@ def TablePaginator(paginator: IPaginator[Product]):
             else:
                 cls = "dropdown-item"
 
-            return html.a({"class_name": cls, "href": "#", "onclick": on_change}, size)
+            return html.a({"class_name": cls, "href": "#", "onclick": on_change}, str(size))
 
         return html.div(
             {"class_name": "btn-group dropdown dropup"},
             html.button(
                 {"class_name": "btn btn-secondary dropdown-toggle", "type": "button", "data-bs-toggle": "dropdown"},
-                html.span({"class_name": "page-size"}, paginator.page_size),
+                html.span({"class_name": "page-size"}, str(paginator.page_size)),
                 html.span({"class_name": "caret"}),
             ),
             html.div({"class_name": "dropdown-menu"}, For(PageOption, sizes)),
@@ -140,7 +141,7 @@ def Search(search: ITableSearch[Product]):
 
 
 @component
-def Toolbar(search: ITableSearch[Product]):
+def Toolbar(search: VdomDict) -> VdomDict:
     return html.div(
         {"class_name": "fixed-table-toolbar"}, html.div({"class_name": "float-right search btn-group"}, search)
     )
@@ -163,8 +164,8 @@ def Loading(show_loading: bool):
 
 
 @component
-def THead(table: Table[Product]):
-    @component
+def THead(table: Table[Product]) -> VdomDict:
+
     def ColHeader(col: ColumnDef):
         @event
         def on_click(event: Dict[str, Any]):
@@ -176,12 +177,9 @@ def THead(table: Table[Product]):
             html.div({"class_name": "fht-cell"}),
         )
 
-    columns = table.data.cols
-
-    return html.thead(html.tr(For(ColHeader, iterator=columns)))
+    return html.thead(html.tr(For(ColHeader, iterator=table.data.cols)))
 
 
-@component
 def TRow(index: int, row: Product):
     return html.tr(
         {"data-index": str(row.index)},
@@ -195,7 +193,7 @@ def TRow(index: int, row: Product):
 
 
 @component
-def TBody(table: List[Product]):
+def TBody(table: List[Product]) -> VdomDict:
     return html.tbody(For(TRow, iterator=enumerate(table)))
 
 

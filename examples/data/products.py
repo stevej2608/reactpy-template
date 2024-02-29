@@ -1,7 +1,7 @@
 
 from typing import List
 from pydantic import BaseModel
-from reactpy_table import Column, Columns
+from reactpy_table import ColumnDef, Columns
 from utils.make_data import make_data
 
 PRODUCTS = [
@@ -16,12 +16,12 @@ PRODUCTS = [
 ]
 
 COLS: Columns = [
-    Column(name='index', label='#'),
-    Column(name='name', label='Name'),
-    Column(name='description', label='Description'),
-    Column(name='technology', label='Technology'),
-    Column(name='id', label='ID'),
-    Column(name='price', label='Price')
+    ColumnDef(name='index', label='#'),
+    ColumnDef(name='name', label='Name'),
+    ColumnDef(name='description', label='Description'),
+    ColumnDef(name='technology', label='Technology'),
+    ColumnDef(name='id', label='ID'),
+    ColumnDef(name='price', label='Price')
     ]
 
 class Product(BaseModel):

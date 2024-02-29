@@ -1,6 +1,7 @@
-from typing import List, cast
+from typing import List, Any, Dict, Callable
 from reactpy import component, html, use_state, use_memo, event
-from reactpy_table import use_reactpy_table, Column, Columns, ColumnSort, Table, Options, Paginator, TableSearch, SimplePaginator, SimpleColumnSort, SimpleTableSearch
+from reactpy.core.types import VdomDict, VdomChildren
+from reactpy_table import use_reactpy_table, ColumnDef, Table, ITableSearch, Columns, Options, IPaginator
 
 from utils.logger import log, logging
 from utils.pico_run import pico_run
@@ -13,36 +14,25 @@ from .data.products import Product, COLS, make_products
 # https://tanstack.com/table/v8/docs/examples/react/expanding
 
 @component
-def TablePaginator(paginator: Paginator):
+def TablePaginator(paginator: IPaginator[Product]):
 
     @component
-    def Button(text:str, action, disabled=False):
+    def Button(text:str, action:Callable[..., None], disabled:bool=False):
 
         @event
-        def onclick(event):
+        def onclick(event: Dict[str, Any]):
             action()
 
         return html.button({'onclick': onclick, 'disabled': disabled}, text)
 
     @component
-    def PageSize(size:int):
+    def PageSizeSelect(sizes:List[int]) -> VdomDict:
 
         @event
-        def onclick(event):
-            paginator.set_page_size(size)
-
-        return html.option({'value': size, 'onclick': onclick}, f"Show {size}")
-
-
-    @component
-    def PageSizeSelect(sizes:List[int]):
-
-        @event
-        def on_change(event):
+        def on_change(event: Dict[str, Any]):
             page_size = int(event['currentTarget']['value'])
             paginator.set_page_size(page_size)
 
-        @component
         def PageOption(size:int):
             return html.option({'value': size}, f"Show {size}")
 
@@ -55,7 +45,7 @@ def TablePaginator(paginator: Paginator):
         count_value, set_count = use_state(0)
 
         @event(prevent_default=True)
-        def on_change(event):
+        def on_change(event: Dict[str, Any]):
 
             try:
                 new_value = int(event['currentTarget']['value'])
@@ -66,7 +56,7 @@ def TablePaginator(paginator: Paginator):
 
             log.info('new_value = %d', new_value)
 
-            if (paginator.page_index != new_value - 1):
+            if paginator.page_index != new_value - 1:
                 paginator.set_page_index(new_value - 1)
             else:
                 set_count(count_value + 1)
@@ -93,7 +83,7 @@ def TablePaginator(paginator: Paginator):
 
 
 @component
-def Text(*children):
+def Text(*children: VdomChildren):
     """Add the pico button margin to make the 
     given text line up with the button text."""
 
@@ -101,39 +91,34 @@ def Text(*children):
 
 
 @component
-def Search(search: TableSearch):
+def Search(search: ITableSearch[Product]) -> VdomDict:
 
     @event
-    def on_change(event):
+    def on_change(event: Dict[str, Any]):
         text = event['currentTarget']['value']
         search.table_search(text)
 
     return html.input({'type': 'search', 'placeholder': 'Search', 'aria-label': 'Search', 'onchange': on_change})
 
 @component
-def THead(table: Table):
+def THead(table: Table[Product]) -> VdomDict:
 
-    @component
-    def text_with_arrow(col: Column):
-
-        sort = cast(ColumnSort, table.sort)
+    def text_with_arrow(col: ColumnDef):
 
         @event
-        def on_click(event):
+        def on_click(event: Dict[str, Any]):
             log.info('onclick col=%s', col)
-            sort.toggle_sort(col)
+            table.sort.toggle_sort(col)
 
         # https://symbl.cc/en/collections/arrow-symbols/
 
-        up = sort.is_sort_reverse(col)
+        up = table.sort.is_sort_reverse(col)
 
         text = col.label + (" 🠕" if up else " 🠗")
         return html.th({'onclick': on_click}, text)
 
-    columns = table.data.cols
-
     return html.thead(
-        For(text_with_arrow, iterator=columns)
+        For(text_with_arrow, iterator=table.data.cols)
     )
 
 
@@ -177,11 +162,6 @@ def AppMain():
     table = use_reactpy_table(Options(
         rows=table_data,
         cols = COLS,
-        plugins=[
-            SimplePaginator.init,
-            SimpleColumnSort.init,
-            SimpleTableSearch.init
-            ]
     ))
 
 

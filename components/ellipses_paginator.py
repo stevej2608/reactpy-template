@@ -49,6 +49,8 @@ class EllipsesPaginator(ComponentClass):
         self.adjacents = adjacents
         self.paginator = paginator
 
+
+
     def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False) -> VdomDict:
         """Return the markup for given element number
 

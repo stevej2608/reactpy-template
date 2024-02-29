@@ -15,7 +15,7 @@ reactpy-router = "^0.1.1"
 pandas = "^2.1.4"
 sqlmodel = "^0.0.14"
 plotly = "^5.18.0"
-reactpy-select = {version = "^0.0.1", source = "pypicloud"}
+reactpy-select = {path = "../reactpy-select", develop = true}
 colorlover = "^0.3.0"
 mistune = "^3.0.2"
 reactpy-table = {path = "../reactpy-table", develop = true}
@@ -29,6 +29,7 @@ line-length = 120
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md#sample-pyprojecttoml-file
 typeCheckingMode = "strict"
 pythonVersion = "3.12"
+reportMissingTypeStubs = false
 
 
 [[tool.poetry.source]]
