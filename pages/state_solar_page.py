@@ -24,8 +24,8 @@ def Layout():
                 html.br(),
 
                 # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.to_html.html
-                
-                utils.html_to_vdom(df.to_html(index=False, index_names=False, classes='table table-stripped')),
+
+                utils.html_to_vdom(df.to_html(index=False, index_names=False, classes='table table-bordered table-hover table-striped')), # type: ignore
             ),
             html.div({"class_name": "col-md-2"}),
         ),
