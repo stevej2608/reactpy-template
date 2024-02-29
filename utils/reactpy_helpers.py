@@ -1,4 +1,4 @@
-from typing import Callable, Any, Union, cast, List
+from typing import Callable, Any, Union, cast, List, overload
 
 from reactpy import html
 from reactpy.core.types import VdomDict
@@ -6,13 +6,13 @@ from reactpy.core.types import VdomDict
 ListCallable = Callable[[Any], VdomDict]
 EnumerateCallable = Callable[[int, Any], VdomDict]
 
-# @overload
-# def For(component: EnumerateCallable, iterator: enumerate[Any]) -> VdomDict:
-#     ...
+@overload
+def For(component: EnumerateCallable, iterator: enumerate[Any]) -> VdomDict:
+    ...
 
-# @overload
-# def For(component: ListCallable, iterator: List[Any]) -> VdomDict:
-#     ...
+@overload
+def For(component: ListCallable, iterator: List[Any]) -> VdomDict:
+    ...
 
 
 def For(component: Union[ListCallable, EnumerateCallable], iterator: Union[List[Any], enumerate[Any]]) -> VdomDict:
