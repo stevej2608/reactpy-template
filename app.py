@@ -8,8 +8,8 @@ from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
 
-from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG, TABLE_EXAMPLE_SLUG
-from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage, TablePage
+from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG, TABLE_EXAMPLE_SLUG, SOLAR_SLUG
+from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage, TablePage, SolarPage
 
 NAV_BAR_ITEMS = {
     "brand": Brand(" Reactpy/SPA", href="/"),
@@ -18,6 +18,7 @@ NAV_BAR_ITEMS = {
         NavLink("Page 2", href="/page2"),
         NavLink("Tickers", href=TICKER_SLUG),
         NavLink("Warming", href=GLOBAL_WARMING_SLUG),
+        NavLink("Solar", href=SOLAR_SLUG),
         NavLink("Table Example", href=TABLE_EXAMPLE_SLUG),
     ],
 }
@@ -72,7 +73,7 @@ def AppMain():
             page_route("/page2", Page2),
             page_route(TICKER_SLUG, TickerPage),
             page_route(GLOBAL_WARMING_SLUG, WarmingPage),
-            page_route(GLOBAL_WARMING_SLUG, WarmingPage),
+            page_route(SOLAR_SLUG, SolarPage),
             page_route(TABLE_EXAMPLE_SLUG, TablePage),
             route("*", PageNotFound()),
         )
@@ -82,8 +83,8 @@ def AppMain():
 # python app.py
 
 if __name__ == "__main__":
-    # For the ticker page only
 
+    # Needed for the ticker page only
     PLOTLY_JS = html.script({"src": "https://cdn.plot.ly/plotly-latest.min.js", "charset": "utf-8"})
 
     opt = ServerOptions(head=[PLOTLY_JS, "assets/multipage.css"])
