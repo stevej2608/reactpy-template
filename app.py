@@ -1,6 +1,6 @@
 from typing import Any
 from reactpy import component, html
-from reactpy.core.types import VdomDict, VdomDictConstructor
+from reactpy.core.types import VdomDictConstructor
 
 from reactpy_router import route, simple, Route
 from utils.server_options import BOOTSTRAP_OPTIONS, ServerOptions
@@ -8,8 +8,8 @@ from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
 
-from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG
-from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage
+from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG, TABLE_EXAMPLE_SLUG
+from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage, TablePage
 
 NAV_BAR_ITEMS = {
     "brand": Brand(" Reactpy/SPA", href="/"),
@@ -18,6 +18,7 @@ NAV_BAR_ITEMS = {
         NavLink("Page 2", href="/page2"),
         NavLink("Tickers", href=TICKER_SLUG),
         NavLink("Warming", href=GLOBAL_WARMING_SLUG),
+        NavLink("Table Example", href=TABLE_EXAMPLE_SLUG),
     ],
 }
 
@@ -39,7 +40,7 @@ def Footer(text: str):
 
 
 @component
-def PageContainer(page: VdomDictConstructor) -> VdomDict:
+def PageContainer(page: VdomDictConstructor):
     return html.div(
         {"class_name": "body"},
         html.header(TopBar(), html.br()),
@@ -58,7 +59,7 @@ def PageContainer(page: VdomDictConstructor) -> VdomDict:
 
 
 @component
-def AppMain() -> VdomDict:
+def AppMain():
 
     def page_route(path:str, page: Any) -> Route:
         element = PageContainer(page)
@@ -71,6 +72,8 @@ def AppMain() -> VdomDict:
             page_route("/page2", Page2),
             page_route(TICKER_SLUG, TickerPage),
             page_route(GLOBAL_WARMING_SLUG, WarmingPage),
+            page_route(GLOBAL_WARMING_SLUG, WarmingPage),
+            page_route(TABLE_EXAMPLE_SLUG, TablePage),
             route("*", PageNotFound()),
         )
     )

@@ -227,7 +227,7 @@ def ProductsTable(table: Table[Product]):
                     # "data-show-search-clear-button": "true",
                     # "data-url": "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
                     # "data-side-pagination": "server",
-                    "class_name": "table table-bordered table-hover",
+                    "class_name": "table table-bordered table-hover table-striped",
                 },
                 THead(table),
                 TBody(table.paginator.rows),
@@ -238,7 +238,7 @@ def ProductsTable(table: Table[Product]):
 
 
 @component
-def AppMain():
+def Layout():
     # Generate some data
 
     table_data = use_memo(lambda: make_products(10000))
@@ -271,7 +271,7 @@ def AppMain():
     )
 
 
-# python -m examples.bootstrap_table
+# python -m pages.table_example_page
 
 if __name__ == "__main__":
-    run(AppMain, options=BOOTSTRAP_OPTIONS)
+    run(Layout, options=BOOTSTRAP_OPTIONS)
