@@ -8,7 +8,7 @@ Template for [reactpy](https://reactpy.dev/docs/index.html) based multi-page pro
 * Page container, custom router
 * Tables with search, sort and pagination
 * Integration with Plotly charts
-* Example of 404 page, global_warming_page, home_page, page_404, ticker_page.
+* Example pages: table_page, global_warming_page, home_page, page_404, ticker_page.
 
 ## Usage
 
