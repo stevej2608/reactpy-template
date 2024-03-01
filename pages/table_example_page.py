@@ -41,10 +41,13 @@ def Header():
 
 @class_component
 class CustomPaginatorUI(EllipsesPaginator):
+    """Provides the paginator, [<< < 1 2 3 ... 999 > >>]"""
+
     PREVIOUS = "<"
     NEXT = ">"
 
     def list_element(self, element: Union[str, int], active: bool = False, disabled: bool = False):
+        """Render a single element in the paginator"""
 
         @event
         def on_click(event: Dict[str, Any]):
@@ -74,8 +77,10 @@ class CustomPaginatorUI(EllipsesPaginator):
 
 @component
 def TablePaginator(paginator: IPaginator[Product]):
+
     @component
     def PageSizeSelect(sizes: List[int]):
+
         def PageOption(size: int):
             @event
             def on_change(event: Dict[str, Any]):
@@ -113,7 +118,7 @@ def TablePaginator(paginator: IPaginator[Product]):
 
 
 @component
-def Search(search: ITableSearch[Product]):
+def SearchComponent(search: ITableSearch[Product]):
 
     search_term, set_search_term = use_state('')
 
@@ -179,6 +184,7 @@ def Loading(show_loading: bool):
 
 @component
 def THead(table: Table[Product]):
+
     def ColHeader(col: ColumnDef):
         @event
         def on_click(event: Dict[str, Any]):
@@ -220,13 +226,6 @@ def ProductsTable(table: Table[Product]):
             # Loading(show_loading=False),
             html.table(
                 {
-                    # "id": "table",
-                    # "data-addrbar": "true",
-                    # "data-pagination": "true",
-                    # "data-search": "true",
-                    # "data-show-search-clear-button": "true",
-                    # "data-url": "https://examples.wenzhixin.net.cn/examples/bootstrap_table/data",
-                    # "data-side-pagination": "server",
                     "class_name": "table table-bordered table-hover table-striped",
                 },
                 THead(table),
@@ -254,12 +253,11 @@ def Layout():
 
     # Define the table UI
 
-    search = Search(table.search)
+    search = SearchComponent(table.search)
 
     return html.div(
         # Header(),
         html.div(
-            {"id": "example"},
             html.div(
                 {"class_name": "bootstrap-table bootstrap5"},
                 Toolbar(search),

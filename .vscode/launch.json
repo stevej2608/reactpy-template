@@ -6,7 +6,7 @@
   "configurations": [
     {
       "name": "1a. app.py",
-      "type": "python",
+      "type": "debugpy",
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "program": "${workspaceRoot}/app.py",
@@ -15,162 +15,11 @@
       "justMyCode": false,
       "serverReadyAction": {
         "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/tickers",
+        "uriFormat": "%s",
         "action": "debugWithChrome",
         "killOnServerStop": true
       }
     },  
-
-    {
-      "name": "1b. examples/hello.py",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "module": "examples.hello",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    },
-
-    {
-      "name": "1c. examples/navbar_example.py",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "module": "examples.navbar_example",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    }, 
-    
-    {
-      "name": "1d. examples/table_example.py",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "module": "examples.table_example",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    }, 
-
-    {
-      "name": "1e. examples/bootstrap_table.py",
-      "type": "python",
-      "request": "launch",
-      "cwd": "${workspaceRoot}",
-      "module": "examples.bootstrap_table",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false,
-      "serverReadyAction": {
-        "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s/",
-        "action": "debugWithChrome",
-        "killOnServerStop": true
-      }
-    },    
- 
-
-    // https://stackoverflow.com/a/65292380/489239
-    {
-      "name": "2a. PyTest (all)",
-      "type": "python",
-      "request": "launch",
-      "stopOnEntry": false,
-      "module": "pytest",
-      "args": [
-        "-o log_cli=1",
-        "-sv",
-        "--headed"
-      ],
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false
-    },
-    {
-      "name": "2b. PyTest (test_login_form.py)",
-      "type": "python",
-      "request": "launch",
-      "stopOnEntry": false,
-      "module": "pytest",
-      "args": [
-        "-o log_cli=1",
-        "tests/test_login_form.py",
-        "--headed"
-      ],
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false
-    },
-    {
-      "name": "2c. PyTest (test_complex_form.py)",
-      "type": "python",
-      "request": "launch",
-      "stopOnEntry": false,
-      "module": "pytest",
-      "args": [
-        "-o log_cli=1",
-        "tests/test_complex_form.py",
-        "--headed"
-      ],
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false
-    },
-    {
-      "name": "2c. PyTest (props.py)",
-      "type": "python",
-      "request": "launch",
-      "stopOnEntry": false,
-      "module": "pytest",
-      "args": [
-        "-o log_cli=1",
-        "tests/test_props.py"
-      ],
-      "cwd": "${workspaceRoot}",
-      "console": "internalConsole",
-      "internalConsoleOptions": "openOnSessionStart",
-      "justMyCode": false
-    },
-    {
-      "name": "3.a Launch Chrome",
-      "request": "launch",
-      "type": "chrome",
-      "url": "http://vscode-dev:82",
-      "webRoot": "${workspaceFolder}",
-      "sourceMaps": true,
-      // Chrome debugger address:
-      // http://vscode-dev:82/_reactpy/js/src/index.js
-      //
-      // js/src/index.js
-      "sourceMapPathOverrides": {
-        "/_reactpy/*": "${workspaceFolder}/*",
-        "\\workspace\\reactpy-dashboard\\_reactpy\\js\\src\\*": "${workspaceFolder}/js/src/*",
-        "/workspace/reactpy-dashboard/_reactpy/js/src/*": "${workspaceFolder}/js/src/*"
-      },
-      "internalConsoleOptions": "openOnSessionStart",
-    },
   ]
+
 }

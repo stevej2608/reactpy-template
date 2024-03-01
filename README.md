@@ -1,5 +1,7 @@
 # reactpy-template
 
+![](./docs/img/reactpy-template.png)
+
 Template for reactpy multi-page projects.
 
 * FastAPi server based

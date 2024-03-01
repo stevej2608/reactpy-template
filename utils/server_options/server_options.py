@@ -5,6 +5,7 @@ from reactpy import html
 from reactpy.core.types import VdomDict
 
 
+
 class ServerOptions(BaseModel):
     """options to be passed to the web server
 

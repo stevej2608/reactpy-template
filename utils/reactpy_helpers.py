@@ -11,7 +11,7 @@ def For(component: EnumerateCallable, iterator: enumerate[Any]) -> VdomDict:
     ...
 
 @overload
-def For(component: ListCallable, iterator: List[Any]) -> VdomDict:
+def For(component: ListCallable, iterator: list[Any]) -> VdomDict:
     ...
 
 

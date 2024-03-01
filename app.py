@@ -61,8 +61,7 @@ def PageContainer(page: VdomDictConstructor):
 
 @component
 def AppMain():
-
-    def page_route(path:str, page: Any) -> Route:
+    def page_route(path: str, page: Any) -> Route:
         element = PageContainer(page)
         return route(path, element)
 
@@ -83,7 +82,6 @@ def AppMain():
 # python app.py
 
 if __name__ == "__main__":
-
     # Needed for the ticker page only
     PLOTLY_JS = html.script({"src": "https://cdn.plot.ly/plotly-latest.min.js", "charset": "utf-8"})
 
