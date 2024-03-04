@@ -1,6 +1,6 @@
 from typing import Any, List, Self
 
-from pydantic import BaseModel, ValidationError, validator
+from pydantic import BaseModel, ValidationError, field_validator, ValidationInfo
 from reactpy import html
 from reactpy.core.types import VdomDict
 
@@ -20,9 +20,10 @@ class ServerOptions(BaseModel):
     asset_root: str = "assets"
     asset_folder: str = "assets"
 
-    @validator("head")
+
+    @field_validator("head")
     @classmethod
-    def validate_head(cls, value: List[str | VdomDict]):
+    def validate_head(cls, value: List[str | VdomDict], info: ValidationInfo) -> List[VdomDict]:
         vals: List[VdomDict] = []
         for v in value:
             if isinstance(v, str):
@@ -45,12 +46,12 @@ class ServerOptions(BaseModel):
 
     def __add__(self, other: Self):
         model = self.model_copy()
-        model.head += other.head
+        model.head = model.head.copy() + other.head.copy()
 
-        if other.asset_root:
+        if model.asset_root != other.asset_root:
             model.asset_root = other.asset_root
 
-        if other.asset_folder:
+        if model.asset_folder != other.asset_folder:
             model.asset_folder = other.asset_folder
 
         return model
