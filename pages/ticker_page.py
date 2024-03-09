@@ -1,12 +1,16 @@
 import sys
-from typing import List, Dict, Any, Tuple, cast
-import pandas as pd
+from typing import Any, Dict, List, Tuple
+
 import colorlover as cl
-from reactpy import html, component, event, use_state
+import pandas as pd
+from reactpy import component, event, html, use_state, use_effect
 from reactpy.core.types import VdomDict
-from reactpy_select import Select, ActionMeta, Options
+from reactpy_router.core import use_query
+from reactpy_select import ActionMeta, Options, Select
+from reactpy_navigator import Navigator
 
 from dash import dcc
+from utils.logger import log
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App
 #
@@ -21,6 +25,12 @@ try:
 except Exception:
     print("Unable to read 'dash-stock-ticker-demo.csv' from github, no internet connection?")
     sys.exit(0)
+
+
+TICKERS: Options = [{'label': s[0], 'value': str(s[1])}
+            for s in zip(df.Stock.unique(), df.Stock.unique())] # type: ignore
+
+NULL_OPTIONS: Options = [] 
 
 colourStyles = {
 
@@ -57,9 +67,11 @@ def bbands(price: Any, window_size:int=10, num_of_std:int=5) -> Tuple[float, flo
 
     return rolling_mean, upper_band, lower_band
 
-def update_graph(tickers: List[str] | None =None) -> VdomDict:
+def update_graphs(tickers: List[str] | None =None) -> VdomDict:
     tickers = tickers or []
     graphs: List[VdomDict] = []
+
+    log.info('update_graph(tickers=%s)', tickers)
 
     if not tickers:
         graphs.append(html.h2({'style': {'marginTop': 20, 'marginBottom': 20}}, "Select a stock ticker."))
@@ -109,26 +121,58 @@ def update_graph(tickers: List[str] | None =None) -> VdomDict:
 
 
 @component
-def Layout() -> VdomDict:
+def TickerSelect(tickers: Options):
 
-    values, set_values =  use_state(cast(Options,[]))
+    values, set_values =  use_state(tickers)
 
-    tickers=[{'label': s[0], 'value': str(s[1])}
-                for s in zip(df.Stock.unique(), df.Stock.unique())] # type: ignore
+    def get_url_search(tickers:Options) -> str:
+        t: List[str] = [ ticker['value'] for ticker in values]
+        if t:
+            return f"?tickers={'+'.join(t)}"
+        else:
+            return ''
 
     @event
     def on_change(selectedTickers: Options, actionMeta: ActionMeta):
         set_values(selectedTickers)
 
-    return html.div(
-        html.h2('Finance Explorer'),
-        html.br(),
+    log.info('TickerSelect tickers=%s, values=%s', tickers, values)
+
+    return html._(
         Select(
-            default_value=values,
+            default_value=tickers,
             onchange=on_change,
-            options=tickers,
+            options=TICKERS,
             multi=True,
             styles=colourStyles
             ),
-        html.div({'id': 'graphs'}, update_graph([val['value'] for val in values]))
+        # Navigator(search=get_url_search(values), refresh=False)
+    )
+
+
+@component
+def Layout() -> VdomDict:
+
+    def qs_tickers():
+        """Extract tickers from query string"""
+
+        # http://127.0.0.1:8000/tickers?tickers=TSLA+GOOGL
+
+        try:
+            tickers = use_query()['tickers'][0].split(' ')
+        except Exception:
+            tickers = []
+
+        return [{'label': ticker, 'value': ticker} for ticker in tickers]
+
+
+    tickers = qs_tickers()
+
+    log.info('TickerSelect tickers=%s', tickers)
+
+    return html.div(
+        html.h2('Finance Explorer'),
+        html.br(),
+        TickerSelect(tickers),
+        html.div({'id': 'graphs'}, update_graphs([ticker['value'] for ticker in tickers])),
     )

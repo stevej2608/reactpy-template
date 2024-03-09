@@ -19,6 +19,7 @@ reactpy-select = {path = "../reactpy-select", develop = true}
 colorlover = "^0.3.0"
 mistune = "^3.0.2"
 reactpy-table = {path = "../reactpy-table", develop = true}
+reactpy-navigator = {path = "../reactpy-navigator", develop = true}
 
 [tool.ruff]
 # https://docs.astral.sh/ruff/configuration/

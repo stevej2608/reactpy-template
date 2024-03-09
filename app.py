@@ -1,12 +1,15 @@
 from typing import Any
 from reactpy import component, html
 from reactpy.core.types import VdomDictConstructor
+from reactpy.backend.hooks import use_location
 
 from reactpy_router import route, simple, Route
 from utils.server_options import BOOTSTRAP_OPTIONS, ServerOptions
 from utils.fast_server import run
 
 from components.navbar import SimpleNavbar, Brand, NavLink
+
+from utils.logger import log
 
 from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG, TABLE_EXAMPLE_SLUG, SOLAR_SLUG
 from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage, TablePage, SolarPage
@@ -16,7 +19,8 @@ NAV_BAR_ITEMS = {
     "left": [
         NavLink("Page 1", href="/page1"),
         NavLink("Page 2", href="/page2"),
-        NavLink("Tickers", href=TICKER_SLUG),
+        NavLink("Tickers1", href=TICKER_SLUG + "?tickers=TSLA"),
+        NavLink("Tickers2", href=TICKER_SLUG + "?tickers=TSLA+GOOGL"),
         NavLink("Warming", href=GLOBAL_WARMING_SLUG),
         NavLink("Solar", href=SOLAR_SLUG),
         NavLink("Table Example", href=TABLE_EXAMPLE_SLUG),
@@ -64,6 +68,10 @@ def AppMain():
     def page_route(path: str, page: Any) -> Route:
         element = PageContainer(page)
         return route(path, element)
+
+    location = use_location()
+
+    log.info('location %s', location)
 
     return html.div(
         simple.router(

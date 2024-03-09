@@ -10,12 +10,13 @@
       "request": "launch",
       "cwd": "${workspaceRoot}",
       "program": "${workspaceRoot}/app.py",
+      "env": {"REACTPY_DEBUG_MODE_JS": "1"},
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
       "justMyCode": false,
       "serverReadyAction": {
         "pattern": "Uvicorn running on\\s+(https?://\\S+)",
-        "uriFormat": "%s",
+        "uriFormat": "%s/tickers?tickers=TSLA",
         "action": "debugWithChrome",
         "killOnServerStop": true
       }
