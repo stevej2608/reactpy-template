@@ -3,14 +3,16 @@ from typing import Any, Dict, List, Tuple
 
 import colorlover as cl
 import pandas as pd
-from reactpy import component, event, html, use_state, use_effect
+from reactpy import component, event, html, use_state
 from reactpy.core.types import VdomDict
+from reactpy_router import Navigate
 from reactpy_router.core import use_query
 from reactpy_select import ActionMeta, Options, Select
-from reactpy_navigator import Navigator
+
 
 from dash import dcc
 from utils.logger import log
+
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App
 #
@@ -123,10 +125,10 @@ def update_graphs(tickers: List[str] | None =None) -> VdomDict:
 @component
 def TickerSelect(tickers: Options):
 
-    values, set_values =  use_state(tickers)
+    to, set_to = use_state('')
 
     def get_url_search(tickers:Options) -> str:
-        t: List[str] = [ ticker['value'] for ticker in values]
+        t: List[str] = [ ticker['value'] for ticker in tickers]
         if t:
             return f"?tickers={'+'.join(t)}"
         else:
@@ -134,9 +136,10 @@ def TickerSelect(tickers: Options):
 
     @event
     def on_change(selectedTickers: Options, actionMeta: ActionMeta):
-        set_values(selectedTickers)
+        loc = get_url_search(selectedTickers) 
+        set_to(loc)
 
-    log.info('TickerSelect tickers=%s, values=%s', tickers, values)
+    log.info('TickerSelect tickers=%s', tickers)
 
     return html._(
         Select(
@@ -146,7 +149,7 @@ def TickerSelect(tickers: Options):
             multi=True,
             styles=colourStyles
             ),
-        # Navigator(search=get_url_search(values), refresh=False)
+        Navigate(to=to)
     )
 
 
