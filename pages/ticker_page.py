@@ -1,5 +1,6 @@
 import sys
 from typing import Any, Dict, List, Tuple
+from pydantic import BaseModel
 
 import colorlover as cl
 import pandas as pd
@@ -12,6 +13,12 @@ from reactpy_select import ActionMeta, Options, Select
 
 from dash import dcc
 from utils.logger import log
+from utils.static_counter import id
+
+
+class Tickers(BaseModel):
+    id: int
+    values: Options
 
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App
@@ -32,7 +39,7 @@ except Exception:
 TICKERS: Options = [{'label': s[0], 'value': str(s[1])}
             for s in zip(df.Stock.unique(), df.Stock.unique())] # type: ignore
 
-NULL_OPTIONS: Options = [] 
+NULL_OPTIONS: Options = []
 
 colourStyles = {
 
@@ -72,8 +79,6 @@ def bbands(price: Any, window_size:int=10, num_of_std:int=5) -> Tuple[float, flo
 def update_graphs(tickers: List[str] | None =None) -> VdomDict:
     tickers = tickers or []
     graphs: List[VdomDict] = []
-
-    log.info('update_graph(tickers=%s)', tickers)
 
     if not tickers:
         graphs.append(html.h2({'style': {'marginTop': 20, 'marginBottom': 20}}, "Select a stock ticker."))
@@ -123,9 +128,11 @@ def update_graphs(tickers: List[str] | None =None) -> VdomDict:
 
 
 @component
-def TickerSelect(tickers: Options):
+def TickerSelect(qs_tickers: Tickers):
 
-    to, set_to = use_state('')
+    log.info('TickerSelect(qs_tickers=%s)', qs_tickers)
+
+    selector_tickers, set_selector_tickers = use_state(qs_tickers)
 
     def get_url_search(tickers:Options) -> str:
         t: List[str] = [ ticker['value'] for ticker in tickers]
@@ -134,12 +141,20 @@ def TickerSelect(tickers: Options):
         else:
             return ''
 
+
+    def latest_tickers(t1:Tickers, t2:Tickers) -> Options:
+        log.info('using tickers-%s', 'qs' if t1.id > t2.id else 'sel' )
+        return t1.values if t1.id > t2.id else t2.values
+
+
     @event
     def on_change(selectedTickers: Options, actionMeta: ActionMeta):
-        loc = get_url_search(selectedTickers) 
-        set_to(loc)
+        log.info('on_change selectedTickers=%s', selectedTickers)
+        set_selector_tickers(Tickers(values=selectedTickers, id=id()))
 
-    log.info('TickerSelect tickers=%s', tickers)
+    tickers = latest_tickers(qs_tickers,selector_tickers)
+
+    log.info('TickerSelect tickers=%s', selector_tickers)
 
     return html._(
         Select(
@@ -149,14 +164,17 @@ def TickerSelect(tickers: Options):
             multi=True,
             styles=colourStyles
             ),
-        Navigate(to=to)
+        Navigate(to=get_url_search(tickers))
     )
 
 
 @component
 def Layout() -> VdomDict:
 
-    def qs_tickers():
+    log.info('ticker_page.Layout()')
+
+
+    def qs_tickers() -> Tickers:
         """Extract tickers from query string"""
 
         # http://127.0.0.1:8000/tickers?tickers=TSLA+GOOGL
@@ -166,16 +184,15 @@ def Layout() -> VdomDict:
         except Exception:
             tickers = []
 
-        return [{'label': ticker, 'value': ticker} for ticker in tickers]
+        return Tickers(values=[{'label': ticker, 'value': ticker} for ticker in tickers], id=id())
 
 
     tickers = qs_tickers()
 
-    log.info('TickerSelect tickers=%s', tickers)
 
     return html.div(
         html.h2('Finance Explorer'),
         html.br(),
         TickerSelect(tickers),
-        html.div({'id': 'graphs'}, update_graphs([ticker['value'] for ticker in tickers])),
+        html.div({'id': 'graphs'}, update_graphs([ticker['value'] for ticker in tickers.values])),
     )
