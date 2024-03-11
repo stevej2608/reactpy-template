@@ -11,7 +11,11 @@ python = "^3.11"
 uvicorn = "^0.25.0"
 reactpy = {extras = ["fastapi"], version = "^1.0.2"}
 fastapi = "^0.108.0"
-reactpy-router =  {path = "../reactpy-router", develop = true}
+
+# poetry lock --no-update && poetry install  --no-root
+# reactpy-router =  {path = "../reactpy-router", develop = true}
+reactpy-router = {url = " https://raw.githubusercontent.com/stevej2608/reactpy-router/v0.1.3/dist/reactpy_router-0.1.3-py2.py3-none-any.whl"}
+
 pandas = "^2.1.4"
 sqlmodel = "^0.0.14"
 plotly = "^5.18.0"
@@ -19,7 +23,6 @@ reactpy-select = {path = "../reactpy-select", develop = true}
 colorlover = "^0.3.0"
 mistune = "^3.0.2"
 reactpy-table = {path = "../reactpy-table", develop = true}
-reactpy-navigator = {path = "../reactpy-navigator", develop = true}
 
 [tool.ruff]
 # https://docs.astral.sh/ruff/configuration/
