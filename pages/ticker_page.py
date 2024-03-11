@@ -10,16 +10,20 @@ from reactpy_router import Navigate
 from reactpy_router.core import use_query
 from reactpy_select import ActionMeta, Options, Select
 
-
 from dash import dcc
-from utils.logger import log
 from utils.static_counter import id
 
 
 class Tickers(BaseModel):
+    """Ticker values plus id"""
     id: int
     values: Options
 
+    @staticmethod
+    def latest(t1:'Tickers', t2:'Tickers') -> Options:
+        """Return the tickers that have the highest (most recent) id"""
+
+        return t1.values if t1.id > t2.id else t2.values
 
 # ReactPy clone of the classic Plotly/Dash Stock Tickers Demo App
 #
@@ -36,7 +40,7 @@ except Exception:
     sys.exit(0)
 
 
-TICKERS: Options = [{'label': s[0], 'value': str(s[1])}
+ALL_TICKERS: Options = [{'label': s[0], 'value': str(s[1])}
             for s in zip(df.Stock.unique(), df.Stock.unique())] # type: ignore
 
 NULL_OPTIONS: Options = []
@@ -76,7 +80,8 @@ def bbands(price: Any, window_size:int=10, num_of_std:int=5) -> Tuple[float, flo
 
     return rolling_mean, upper_band, lower_band
 
-def update_graphs(tickers: List[str] | None =None) -> VdomDict:
+@component
+def update_graphs(tickers: List[str] | None =None):
     tickers = tickers or []
     graphs: List[VdomDict] = []
 
@@ -128,11 +133,9 @@ def update_graphs(tickers: List[str] | None =None) -> VdomDict:
 
 
 @component
-def TickerSelect(qs_tickers: Tickers):
+def TickerSelector(query_string: Tickers):
 
-    log.info('TickerSelect(qs_tickers=%s)', qs_tickers)
-
-    selector_tickers, set_selector_tickers = use_state(qs_tickers)
+    selector_value, set_selector_tickers = use_state(query_string)
 
     def get_url_search(tickers:Options) -> str:
         t: List[str] = [ ticker['value'] for ticker in tickers]
@@ -141,26 +144,20 @@ def TickerSelect(qs_tickers: Tickers):
         else:
             return ''
 
-
-    def latest_tickers(t1:Tickers, t2:Tickers) -> Options:
-        log.info('using tickers-%s', 'qs' if t1.id > t2.id else 'sel' )
-        return t1.values if t1.id > t2.id else t2.values
-
-
     @event
     def on_change(selectedTickers: Options, actionMeta: ActionMeta):
-        log.info('on_change selectedTickers=%s', selectedTickers)
         set_selector_tickers(Tickers(values=selectedTickers, id=id()))
 
-    tickers = latest_tickers(qs_tickers,selector_tickers)
+    # Arbitrate between using the query string or
+    # the selector value. The most recent change wins
 
-    log.info('TickerSelect tickers=%s', selector_tickers)
+    tickers = Tickers.latest(query_string,selector_value)
 
     return html._(
         Select(
             default_value=tickers,
             onchange=on_change,
-            options=TICKERS,
+            options=ALL_TICKERS,
             multi=True,
             styles=colourStyles
             ),
@@ -169,16 +166,10 @@ def TickerSelect(qs_tickers: Tickers):
 
 
 @component
-def Layout() -> VdomDict:
-
-    log.info('ticker_page.Layout()')
-
+def Layout():
 
     def qs_tickers() -> Tickers:
-        """Extract tickers from query string"""
-
-        # http://127.0.0.1:8000/tickers?tickers=TSLA+GOOGL
-
+        """Extract tickers from the browser query string"""
         try:
             tickers = use_query()['tickers'][0].split(' ')
         except Exception:
@@ -186,13 +177,11 @@ def Layout() -> VdomDict:
 
         return Tickers(values=[{'label': ticker, 'value': ticker} for ticker in tickers], id=id())
 
-
     tickers = qs_tickers()
-
 
     return html.div(
         html.h2('Finance Explorer'),
         html.br(),
-        TickerSelect(tickers),
+        TickerSelector(tickers),
         html.div({'id': 'graphs'}, update_graphs([ticker['value'] for ticker in tickers.values])),
     )
