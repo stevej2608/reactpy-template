@@ -4,11 +4,12 @@
 
 Template for [reactpy](https://reactpy.dev/docs/index.html) based multi-page projects.
 
-* FastAPi server based (can easily be changed)
-* Page container, custom router
-* Tables with search, sort and pagination
-* Integration with Plotly charts
-* Example pages: table_page, global_warming_page, home_page, page_404, ticker_page.
+- [X] FastAPi server based (can easily be changed)
+- [X] Page container, custom router
+- [X] Browser history tracking
+- [X] Tables with search, sort and pagination
+- [X] Integration with Plotly charts
+- [X] Example pages: table_page, global_warming_page, home_page, page_404, ticker_page.
 
 ## Usage
 
