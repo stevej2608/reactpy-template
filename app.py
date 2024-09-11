@@ -6,10 +6,10 @@ from reactpy.backend.hooks import use_location
 from reactpy_router import route, simple, Route
 from utils.server_options import BOOTSTRAP_OPTIONS, ServerOptions
 from utils.fast_server import run
+from utils.logger import log
 
 from components.navbar import SimpleNavbar, Brand, NavLink
 
-from utils.logger import log
 
 from pages import TICKER_SLUG, GLOBAL_WARMING_SLUG, TABLE_EXAMPLE_SLUG, SOLAR_SLUG
 from pages import HomePage, Page1, Page2, TickerPage, PageNotFound, WarmingPage, TablePage, SolarPage
