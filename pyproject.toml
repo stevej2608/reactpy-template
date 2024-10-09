@@ -23,17 +23,19 @@ reactpy-select = "^0.0.5"
 colorlover = "^0.3.0"
 mistune = "^3.0.2"
 reactpy-table = "^0.0.11"
+reactpy-github-buttons = "^0.0.14"
 
 [tool.ruff]
 # https://docs.astral.sh/ruff/configuration/
 # https://marketplace.visualstudio.com/items?itemName=charliermarsh.ruff
 
 line-length = 120
-[tool.pyright]
+
+#[tool.pyright]
 # https://github.com/microsoft/pyright/blob/main/docs/configuration.md#sample-pyprojecttoml-file
-typeCheckingMode = "strict"
-pythonVersion = "3.12"
-reportMissingTypeStubs = false
+#typeCheckingMode = "strict"
+#pythonVersion = "3.12"
+#reportMissingTypeStubs = false
 
 
 [[tool.poetry.source]]

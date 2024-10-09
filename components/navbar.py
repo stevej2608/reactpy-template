@@ -2,6 +2,9 @@ from typing import List
 from reactpy import component, html
 from reactpy.core.types import VdomChildren, VdomDict
 from reactpy_router import link
+from reactpy_github_buttons import StarButton
+
+from utils.logger import log
 
 # https://getbootstrap.com/docs/5.3/components/navbar/
 
@@ -92,11 +95,26 @@ def NavDropdown(*children: VdomChildren, title: str="Undefined"):
 
 @component
 def SimpleNavbar(brand: VdomDict = html.div(), left: List[VdomDict]=[], right: List[VdomDict]=[]):
+
+    @component
+    def GHButton():
+        log.info('GHButton.render()')
+        return StarButton(
+            user="buttons",
+            repo="github-buttons",
+            large=True,
+            show_count=True,
+            color_scheme="light"
+        )
+
+
+
     return Navbar(
         brand,
         Toggle(),
         Collapse(
             Nav(*left),
-            Nav(*right)
+            Nav(*right),
+            GHButton()
         )
     )
