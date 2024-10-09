@@ -1,10 +1,10 @@
 import sys
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, cast
 from pydantic import BaseModel
 
 import colorlover as cl
 import pandas as pd
-from reactpy import component, event, html, use_state
+from reactpy import component, event, html, use_state, use_effect
 from reactpy.core.types import VdomDict
 from reactpy_router import Navigate
 from reactpy_router.core import use_query
@@ -12,6 +12,7 @@ from reactpy_select import ActionMeta, Options, Select
 
 from dash import dcc
 from utils.static_counter import id
+from utils.logger import log
 
 
 class Tickers(BaseModel):
@@ -83,51 +84,56 @@ def bbands(price: Any, window_size:int=10, num_of_std:int=5) -> Tuple[float, flo
 @component
 def update_graphs(tickers: List[str] | None =None):
     tickers = tickers or []
-    graphs: List[VdomDict] = []
+    graphs, set_graphs = use_state(cast(List[VdomDict], []))
 
-    if not tickers:
-        graphs.append(html.h2({'style': {'marginTop': 20, 'marginBottom': 20}}, "Select a stock ticker."))
-    else:
-        for _i, ticker in enumerate(tickers):
+    @use_effect(dependencies=[tickers])
+    async def _update():
+        glist: List[VdomDict] = []
+        if not tickers:
+            glist.append(html.h2({'style': {'marginTop': 20, 'marginBottom': 20}}, "Select a stock ticker."))
+        else:
+            for _i, ticker in enumerate(tickers):
 
-            dff = df[df['Stock'] == ticker]
+                dff = df[df['Stock'] == ticker]
 
-            candlestick: Dict[str, Any] = {
-                'x': dff['Date'],
-                'open': dff['Open'],
-                'high': dff['High'],
-                'low': dff['Low'],
-                'close': dff['Close'],
-                'type': 'candlestick',
-                'name': ticker,
-                'legendgroup': ticker,
-                'increasing': {'line': {'color': colorscale[0]}},
-                'decreasing': {'line': {'color': colorscale[1]}}
-            }
+                candlestick: Dict[str, Any] = {
+                    'x': dff['Date'],
+                    'open': dff['Open'],
+                    'high': dff['High'],
+                    'low': dff['Low'],
+                    'close': dff['Close'],
+                    'type': 'candlestick',
+                    'name': ticker,
+                    'legendgroup': ticker,
+                    'increasing': {'line': {'color': colorscale[0]}},
+                    'decreasing': {'line': {'color': colorscale[1]}}
+                }
 
-            bb_bands = bbands(dff.Close) # type: ignore
+                bb_bands = bbands(dff.Close) # type: ignore
 
-            bollinger_traces: List[Dict[str, Any]] = [{
-                'x': dff['Date'], 'y': y,
-                'type': 'scatter',
-                'mode': 'lines',
-                'line': {'width': 2, 'color': colorscale[(i*2) % len(colorscale)]},
-                'hoverinfo': 'none',
-                'legendgroup': ticker,
-                'showlegend': (i == 0),
-                'name': f'{ticker} - Bollinger Bands'
-            } for i, y in enumerate(bb_bands)]
+                bollinger_traces: List[Dict[str, Any]] = [{
+                    'x': dff['Date'], 'y': y,
+                    'type': 'scatter',
+                    'mode': 'lines',
+                    'line': {'width': 2, 'color': colorscale[(i*2) % len(colorscale)]},
+                    'hoverinfo': 'none',
+                    'legendgroup': ticker,
+                    'showlegend': (i == 0),
+                    'name': f'{ticker} - Bollinger Bands'
+                } for i, y in enumerate(bb_bands)]
 
-            graphs.append(dcc.Graph(
-                figure={
-                    'data': [candlestick] + bollinger_traces,
-                    'layout': {
-                        'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
-                        'legend': {'x': 0}
-                    }
-                },
-                config={'displayModeBar': False}
-            ))
+                glist.append(dcc.Graph(
+                    figure={
+                        'data': [candlestick] + bollinger_traces,
+                        'layout': {
+                            'margin': {'b': 0, 'r': 10, 'l': 60, 't': 0},
+                            'legend': {'x': 0}
+                        }
+                    },
+                    config={'displayModeBar': False}
+                ))
+
+        set_graphs(glist)
 
     return html.div(graphs)
 
@@ -178,6 +184,8 @@ def Layout():
         return Tickers(values=[{'label': ticker, 'value': ticker} for ticker in tickers], id=id())
 
     tickers = qs_tickers()
+
+    log.info("render")
 
     return html.div(
         html.h2('Finance Explorer'),
